@@ -100,3 +100,57 @@ int http_parse_req(char *http_req, int len, struct http_req *req)
     return 0;
 }
 
+
+char* http_stringify_headers(struct http_header *headers, int header_count, int* headers_size) {
+    int headers_len = 0;
+    // First calculate bytes needed:
+    // add the header strings lengths to the variable
+    for (int i = 0; i < header_count; i++)
+    {
+        headers_len += strlen(headers[i].key);
+        headers_len += strlen(headers[i].value);
+    }
+    // add the colon and whitespace part of the header for each header
+    headers_len += header_count * 4 * sizeof(char) + 2; // multiply by 2 to add the ending \r\n
+    headers_len += 1; // for the null terminator
+    char* header_string = (char*)calloc(1, headers_len);
+
+    for (int i = 0; i < header_count; i++)
+    {
+        int key_len = strlen(headers[i].key);
+        int val_len = strlen(headers[i].value);
+        char header_str[key_len + val_len + 5];
+        sprintf(header_str, "%s: %s\r\n", headers[i].key, headers[i].value);
+        strcat(header_string, header_str);
+    }
+    strcat(header_string, "\r\n");
+    *headers_size = headers_len;
+    return header_string;
+}
+
+char* http_stringify_resp(struct http_resp* res) {
+    int status_len = strlen(res->http_ver)+strlen(res->reason_str)+9;
+    char* status_line = (char* )malloc(status_len); // 9 comes form: 1 (terminating null byte) + 3 (status code) + 3 (whitespace) + 2 (http linebreak)
+    
+    sprintf(status_line, "%s %d %s\r\n", res->http_ver, res->status, res->reason_str);
+
+    int headers_size;
+    
+    char* headers = http_stringify_headers(res->headers, res->header_count, &headers_size);
+    printf("Headers: %d\n%s\n", headers_size,headers);
+    int content_len = strlen(res->content);
+
+    int resp_size = headers_size + content_len + strlen(status_line) + 2 * sizeof(char) +3; // For the ending \r\n
+
+    printf("Response bytes %d\n", resp_size);
+
+    char* response = calloc(1, resp_size);
+    strncat(response,status_line, status_len);
+    strncat(response,headers,headers_size);
+    strncat(response,res->content,content_len);
+
+    free(headers);
+    free(status_line);
+
+    return response;
+}

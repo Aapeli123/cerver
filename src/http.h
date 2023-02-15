@@ -26,12 +26,17 @@ struct http_req
 struct http_resp
 {
     char *http_ver;
-    int *status;
+    int status;
     char *reason_str;
+    struct http_header *headers;
+    int header_count;
     char *content;
 };
 
 void header_buf_free(struct http_header *headers, int n);
 void http_req_free(struct http_req *req);
 int http_parse_req(char *http_req, int len, struct http_req *req);
+
+char* http_stringify_resp(struct http_resp* res);
+
 #endif
