@@ -1,8 +1,4 @@
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
-
-#define HEADER_BUF_SIZE 2048
+#include "http.h"
 
 struct http_header
 {
@@ -129,16 +125,3 @@ struct http_resp
     char *reason_str;
     char *content;
 };
-
-int main()
-{
-    char buffer[463];
-    FILE *f = fopen("./example_req.http", "r");
-    fread(buffer, 463, 1, f);
-    fclose(f);
-    int header_count;
-    struct http_req example_req;
-    http_parse_req(buffer, 463, &example_req);
-    http_req_free(&example_req);
-    return 0;
-}
