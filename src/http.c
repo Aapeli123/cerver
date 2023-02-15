@@ -1,20 +1,5 @@
 #include "http.h"
 
-struct http_header
-{
-    char *key;
-    char *value;
-};
-
-struct http_req
-{
-    char *path;
-    char *type;
-    char *http_ver;
-    struct http_header *headers;
-    int header_count;
-};
-
 void header_buf_free(struct http_header *headers, int n)
 {
     for (int i = 0; i < n; i++)
@@ -40,12 +25,10 @@ int http_parse_req(char *http_req, int len, struct http_req *req)
     header_buf = (struct http_header *)calloc(HEADER_BUF_SIZE, sizeof(struct http_header));
 
     char *token = strtok(http_req, "\r\n");
-    int reqline_len = strlen(token);
+    int reqline_len = strlen(token) + 1;
     char *req_line = (char *)(malloc(reqline_len * sizeof(char)));
 
     strcpy(req_line, token);
-    printf("Request:\n%s\n\n", req_line);
-    printf("Headers: \n");
 
     int hc = 0;
     while (1)
@@ -64,15 +47,15 @@ int http_parse_req(char *http_req, int len, struct http_req *req)
             free(req_line);
             return 1;
         }
-        int tokenlen = strlen(token);
+        int tokenlen = strlen(token) + 1;
         char *val_start = strchr(token, ':');
-        int after_colon_len = strlen(val_start);
+        int after_colon_len = strlen(val_start) + 1;
         val_start++;
         while (*val_start == ' ')
         {
             val_start++;
         }
-        int val_len = strlen(val_start);
+        int val_len = strlen(val_start) + 1;
         char *val = (char *)malloc(val_len * sizeof(char));
         if (val == NULL)
         {
@@ -92,7 +75,6 @@ int http_parse_req(char *http_req, int len, struct http_req *req)
 
         header_buf[hc].key = key;
         header_buf[hc].value = val;
-        printf("%s\n", token);
         hc++;
     }
 
@@ -102,9 +84,9 @@ int http_parse_req(char *http_req, int len, struct http_req *req)
     char *r_path = strtok(NULL, " ");
     char *r_http_ver = strtok(NULL, " ");
 
-    type = (char *)malloc(strlen(r_type) * sizeof(char));
-    path = (char *)malloc(strlen(r_path) * sizeof(char));
-    http_ver = (char *)malloc(strlen(r_http_ver) * sizeof(char));
+    type = (char *)malloc((strlen(r_type) + 1) * sizeof(char));
+    path = (char *)malloc((strlen(r_path) + 1) * sizeof(char));
+    http_ver = (char *)malloc((strlen(r_http_ver) + 1) * sizeof(char));
 
     strcpy(type, r_type);
     strcpy(path, r_path);
@@ -118,10 +100,3 @@ int http_parse_req(char *http_req, int len, struct http_req *req)
     return 0;
 }
 
-struct http_resp
-{
-    char *http_ver;
-    int *status;
-    char *reason_str;
-    char *content;
-};
