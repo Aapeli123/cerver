@@ -98,7 +98,9 @@ int main()
     }
     printf("Recieved %d bytes:\n", n);
     printf("%s\n", buffer);
-
+    FILE *f = fopen("./example_req.http", "w");
+    fwrite(buffer, n, 1, f);
+    fclose(f);
     shutdown(client_fd, SHUT_RDWR);
     server_cleanup();
 
