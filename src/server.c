@@ -88,6 +88,11 @@ int server_start(int port) {
         shutdown(client_fd, SHUT_RDWR);
         server_cleanup();
     }
+    printf("Recieved %d bytes:\n", n);
+    printf("%s\n", buffer);
+    FILE *f = fopen("./example_req.http", "w");
+    fwrite(buffer, n, 1, f);
+    fclose(f);
     handle_request(buffer, n, client_fd);
 
     shutdown(client_fd, SHUT_RDWR);
