@@ -1,13 +1,5 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <errno.h>
+#include "server.h"
 
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <openssl/ssl.h>
-
-#define BUFFER_SIZE 2048
 
 #define HANDLE_ERROR(a)   \
     if (a == -1)          \
@@ -62,31 +54,31 @@ int server_listen()
 
 int init()
 {
-    printf("Allocating buffer");
+    printf("Allocating buffer\n");
     buffer = (char *)calloc(BUFFER_SIZE, sizeof(char));
+    if(buffer == NULL) {
+        return -1;
+    }
     tls_context = SSL_CTX_new(TLS_method());
+    if(tls_context == NULL) {
+        return -1;
+    }
+    return 0;
 }
 
-int main()
-{
-    init();
+int server_start(int port) {
+    HANDLE_ERROR(init());
     printf("Starting cerver\n");
 
     // Start the server:
     HANDLE_ERROR(server_create_socket());
-    HANDLE_ERROR(server_bind(8080));
-    HANDLE_ERROR(server_listen())
+    HANDLE_ERROR(server_bind(port));
+    HANDLE_ERROR(server_listen());
 
     // Accept connections
     struct sockaddr_in client;
     int client_fd, n, client_addr_size = sizeof(struct sockaddr_in);
 
-    if (buffer == NULL)
-    {
-        printf("Buffer allocation failed\n");
-        server_cleanup();
-        return -1;
-    }
     client_fd = accept(server_descriptor, (struct sockaddr *)&client, (socklen_t *)&client_addr_size);
 
     n = recv(client_fd, buffer, BUFFER_SIZE, 0);
@@ -96,11 +88,9 @@ int main()
         shutdown(client_fd, SHUT_RDWR);
         server_cleanup();
     }
-    printf("Recieved %d bytes:\n", n);
-    printf("%s\n", buffer);
+    handle_request(buffer, n, client_fd);
 
     shutdown(client_fd, SHUT_RDWR);
     server_cleanup();
-
     return 0;
 }
