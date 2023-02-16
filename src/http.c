@@ -22,7 +22,7 @@ void http_req_free(struct http_req *req)
 int http_parse_req(char *http_req, int len, struct http_req *req)
 {
     struct http_header *header_buf;
-    header_buf = (struct http_header *)calloc(HEADER_BUF_SIZE, sizeof(struct http_header));
+    header_buf = (struct http_header *)calloc(1, HEADER_BUF_SIZE);
 
     char *token = strtok(http_req, "\r\n");
     int reqline_len = strlen(token) + 1;

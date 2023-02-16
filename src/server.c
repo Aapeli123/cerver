@@ -47,7 +47,7 @@ int server_bind(int port)
 
 int server_listen()
 {
-    int err = listen(server_descriptor, 3);
+    int err = listen(server_descriptor, 12);
     return err;
 }
 
@@ -77,7 +77,12 @@ int server_start(int port, struct thread_pool* tp) {
     
     while(should_run) {
         client_fd = accept(server_descriptor, (struct sockaddr *)&client, (socklen_t *)&client_addr_size);
-        thread_pool_add_work(tp, handler_worker, &client_fd);
+        if(client_fd < 0){
+            perror("ERR: ");
+            continue;
+        }
+        printf("New connection :D\n");
+        thread_pool_add_work(tp, handler_worker, client_fd);
     }
 
 
