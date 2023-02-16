@@ -12,6 +12,7 @@
 #include <openssl/ssl.h>
 
 #include "handler.h"
+#include "threads/thread_pool.h"
 
 #define BUFFER_SIZE 2048
 
