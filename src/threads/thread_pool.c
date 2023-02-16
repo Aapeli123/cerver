@@ -63,7 +63,7 @@ struct thread_pool_work *thread_pool_get_work(struct thread_pool *tp)
     if (work->next == NULL)
     {
         tp->first = NULL;
-        tp->last == NULL;
+        tp->last = NULL;
     }
     else
     {
