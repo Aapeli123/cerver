@@ -14,3 +14,24 @@ int handle_request(char *req_buffer, int req_size, int client_fd)
 
     return 0;
 }
+
+void handler_worker(void* client_fd) {
+    int fd = *((int*)client_fd);
+    char* buffer = (char *)calloc(BUFFER_SIZE, sizeof(char));
+    if(buffer == NULL) {
+        return;
+    }
+
+    int n = recv(fd, buffer, BUFFER_SIZE, 0);
+    printf("%d bytes recieved\n", n);
+    if (n == -1)
+    {
+        perror("ERR");
+        shutdown(fd, SHUT_RDWR);
+        free(buffer);
+        return;
+    }
+    handle_request(buffer, n, fd);
+    shutdown(fd, SHUT_RDWR);
+    free(buffer);
+}

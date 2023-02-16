@@ -13,6 +13,7 @@
 int server_descriptor;
 struct sockaddr_in server_addr;
 char *buffer;
+bool should_run = true;
 SSL_CTX *tls_context;
 
 void server_cleanup()
@@ -20,8 +21,6 @@ void server_cleanup()
     printf("Cleaning up...\n");
     printf("Shutting down server socket\n");
     shutdown(server_descriptor, SHUT_RDWR);
-    printf("Freeing buffer...\n");
-    free(buffer);
 
     SSL_CTX_free(tls_context);
 }
@@ -54,11 +53,6 @@ int server_listen()
 
 int init()
 {
-    printf("Allocating buffer\n");
-    buffer = (char *)calloc(BUFFER_SIZE, sizeof(char));
-    if(buffer == NULL) {
-        return -1;
-    }
     tls_context = SSL_CTX_new(TLS_method());
     if(tls_context == NULL) {
         return -1;
@@ -66,31 +60,27 @@ int init()
     return 0;
 }
 
-int server_start(int port) {
+int server_start(int port, struct thread_pool* tp) {
     HANDLE_ERROR(init());
-    printf("Starting cerver\n");
 
     // Start the server:
     HANDLE_ERROR(server_create_socket());
     HANDLE_ERROR(server_bind(port));
     HANDLE_ERROR(server_listen());
 
+    printf("Server listening on port %d\n", port);
+    
     // Accept connections
     struct sockaddr_in client;
-    int client_fd, n, client_addr_size = sizeof(struct sockaddr_in);
+    int client_fd, client_addr_size = sizeof(struct sockaddr_in);
 
-    client_fd = accept(server_descriptor, (struct sockaddr *)&client, (socklen_t *)&client_addr_size);
-
-    n = recv(client_fd, buffer, BUFFER_SIZE, 0);
-    if (n == -1)
-    {
-        perror("ERR");
-        shutdown(client_fd, SHUT_RDWR);
-        server_cleanup();
+    
+    while(should_run) {
+        client_fd = accept(server_descriptor, (struct sockaddr *)&client, (socklen_t *)&client_addr_size);
+        thread_pool_add_work(tp, handler_worker, &client_fd);
     }
-    handle_request(buffer, n, client_fd);
 
-    shutdown(client_fd, SHUT_RDWR);
+
     server_cleanup();
     return 0;
 }

@@ -14,7 +14,6 @@
 #include "handler.h"
 #include "threads/thread_pool.h"
 
-#define BUFFER_SIZE 2048
 
 
 void server_cleanup();
@@ -22,6 +21,6 @@ int server_create_socket();
 int server_bind(int port);
 int server_listen();
 int init();
-int server_start(int port);
+int server_start(int port, struct thread_pool* tp);
 
 #endif
