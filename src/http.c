@@ -21,10 +21,18 @@ void http_req_free(struct http_req *req)
 
 int http_parse_req(char *http_req, int len, struct http_req *req)
 {
+    if (http_req == NULL)
+    {
+        return -1;
+    }
     struct http_header *header_buf;
     header_buf = (struct http_header *)calloc(1, HEADER_BUF_SIZE);
 
     char *token = strtok(http_req, "\r\n");
+    if (token == NULL)
+    {
+        return -1;
+    }
     int reqline_len = strlen(token) + 1;
     char *req_line = (char *)(malloc(reqline_len * sizeof(char)));
 

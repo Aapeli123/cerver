@@ -4,21 +4,24 @@
 #include "http.h"
 #include "threads/thread_pool.h"
 
-struct thread_pool* thread_pool;
+struct thread_pool *thread_pool;
 
-void clean() {
+void clean()
+{
     server_cleanup();
-    if(thread_pool != NULL)
+    if (thread_pool != NULL)
         thread_pool_destroy(thread_pool);
 }
 
-void handle_sigint() {
+void handle_sigint()
+{
     printf("SIGINT or SIGTERM Recieved, exiting cleanly!\n");
     clean();
     exit(0);
 }
 
-void handle_segv() {
+void handle_segv()
+{
     printf("Oh shit i think this should have not happened :(\n");
     clean();
     exit(SIGSEGV);
@@ -27,7 +30,7 @@ void handle_segv() {
 int main()
 {
     printf("Starting Cerver...\n");
-    thread_pool = thread_pool_create(1);
+    thread_pool = thread_pool_create(4);
     printf("Thread pool created\n");
 
     signal(SIGINT, handle_sigint);

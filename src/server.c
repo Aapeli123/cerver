@@ -1,6 +1,5 @@
 #include "server.h"
 
-
 #define HANDLE_ERROR(a)   \
     if (a == -1)          \
     {                     \
@@ -47,20 +46,22 @@ int server_bind(int port)
 
 int server_listen()
 {
-    int err = listen(server_descriptor, 12);
+    int err = listen(server_descriptor, 2048);
     return err;
 }
 
 int init()
 {
     tls_context = SSL_CTX_new(TLS_method());
-    if(tls_context == NULL) {
+    if (tls_context == NULL)
+    {
         return -1;
     }
     return 0;
 }
 
-int server_start(int port, struct thread_pool* tp) {
+int server_start(int port, struct thread_pool *tp)
+{
     HANDLE_ERROR(init());
 
     // Start the server:
@@ -69,22 +70,23 @@ int server_start(int port, struct thread_pool* tp) {
     HANDLE_ERROR(server_listen());
 
     printf("Server listening on port %d\n", port);
-    
+
     // Accept connections
     struct sockaddr_in client;
-    int client_fd, client_addr_size = sizeof(struct sockaddr_in);
+    int *client_fd, client_addr_size = sizeof(struct sockaddr_in);
 
-    
-    while(should_run) {
-        client_fd = accept(server_descriptor, (struct sockaddr *)&client, (socklen_t *)&client_addr_size);
-        if(client_fd < 0){
+    while (should_run)
+    {
+        client_fd = malloc(sizeof(int));
+        *client_fd = accept(server_descriptor, (struct sockaddr *)&client, (socklen_t *)&client_addr_size);
+        if (client_fd < 0)
+        {
             perror("ERR: ");
             continue;
         }
         printf("New connection :D\n");
-        thread_pool_add_work(tp, handler_worker, client_fd);
+        thread_pool_add_work(tp, handler_worker, (void *)client_fd);
     }
-
 
     server_cleanup();
     return 0;
