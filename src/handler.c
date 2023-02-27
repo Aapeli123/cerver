@@ -16,12 +16,13 @@ int handle_request(char *req_buffer, int req_size, int client_fd)
     int r = http_parse_req(req_buffer, req_size, req);
     if (r < 0)
     {
+        free(req);
         free(resp);
         return -1;
     }
     write_response(client_fd, resp, strlen(resp) + 1);
     free(resp);
-    free(req);
+    http_req_free(req);
     return 0;
 }
 
