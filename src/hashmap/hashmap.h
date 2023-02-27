@@ -4,7 +4,10 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <stdio.h>
+#include <math.h>
+
 #include "hash.h"
+#include "primes.h"
 
 struct Bucket
 {
@@ -19,8 +22,10 @@ typedef struct Bucket bucket_t;
 struct HashMap
 {
     int bucket_count;
+    int value_count;
     bucket_t **buckets;
 };
 
 typedef struct HashMap hashmap_t;
+
 #endif

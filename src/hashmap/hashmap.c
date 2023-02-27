@@ -1,5 +1,18 @@
 #include "hashmap.h"
 
+
+static int next_bucket_count(int cur_buckets) {
+    int res = -1;
+    for(int i = 0; i < 140; i++) {
+        if(primes[i] > cur_buckets) {
+            return primes[i];
+        }
+    }
+    if(res == -1) {
+        return cur_buckets + 1000;
+    }
+}
+
 hashmap_t *create_hashmap(int initial_buckets)
 {
     hashmap_t *map = calloc(1, sizeof(hashmap_t));
@@ -11,7 +24,7 @@ hashmap_t *create_hashmap(int initial_buckets)
     return map;
 }
 
-// Destroys bucket and all following buckets in its linked list
+// Destroys bucket and all following buckets in its linked list, also frees the key and the value
 static void destroy_bucket(bucket_t *bucket)
 {
     if (bucket->next != NULL)
@@ -21,6 +34,14 @@ static void destroy_bucket(bucket_t *bucket)
 
     free(bucket->key);
     free(bucket->value);
+    free(bucket);
+}
+
+static void destroy_only_bucket(bucket_t *bucket) {
+    if (bucket->next != NULL)
+    {
+        destroy_bucket(bucket->next);
+    }
     free(bucket);
 }
 
@@ -38,18 +59,29 @@ static void rehash(hashmap_t *hashmap, int new_bucket_count)
 
     // Allocate more memory for hashmap buckets and zero it:
     hashmap->buckets = realloc(hashmap->buckets, new_bucket_count);
-
+    hashmap->bucket_count = new_bucket_count;
     for (int i = 0; i < old_bucket_count; i++)
     {
         if (temp_buckets[i] == NULL)
             continue;
-
-        int new_hash = hash(temp_buckets[i]->key, new_bucket_count);
+        bucket_t* cur = temp_buckets[i];
+        do
+        {
+            hashmap_add(hashmap, cur->key, cur->value);
+            cur = cur->next;
+        } while (cur->next != NULL);
+        destroy_bucket(temp_buckets[i]);
     }
+    free(temp_buckets);
 }
 
 void hashmap_add(hashmap_t *hashmap, char *key, char *value)
 {
+
+    if((hashmap->value_count / hashmap->bucket_count) >= 0.6f) {
+        rehash(hashmap, next_bucket_count(hashmap->bucket_count));
+    }
+
     int index = hash(key, hashmap->bucket_count);
 
     bucket_t *bucket = calloc(1, sizeof(bucket_t));
@@ -61,6 +93,7 @@ void hashmap_add(hashmap_t *hashmap, char *key, char *value)
     }
 
     hashmap->buckets[index] = bucket;
+    hashmap->value_count++;
 }
 
 void hashmap_remove(hashmap_t *hashmap, char *key)
@@ -88,6 +121,7 @@ void hashmap_remove(hashmap_t *hashmap, char *key)
     prev->next = bucket->next;
     bucket->next = NULL;
     destroy_bucket(bucket);
+    hashmap->value_count--;
 }
 
 char *hashmap_get(hashmap_t *hashmap, char *key)
