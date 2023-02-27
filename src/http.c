@@ -146,7 +146,7 @@ char *http_stringify_resp(struct http_resp *res)
     int headers_size;
 
     char *headers = http_stringify_headers(res->headers, res->header_count, &headers_size);
-    int content_len = strlen(res->content);
+    int content_len = strlen(res->content) + 1;
 
     int resp_size = headers_size + content_len + strlen(status_line);
 
