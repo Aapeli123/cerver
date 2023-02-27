@@ -1,7 +1,7 @@
 BUILD_DIR := ./out
 SOURCE_DIR := ./src
 COMPILE_FILES := $(shell find ${SOURCE_DIR} -name '*.c')
-COMPILE_FLAGS := -lssl -pthread -O3 -Wall -g
+COMPILE_FLAGS := -lssl -pthread -Wall -g
 build:
 	mkdir -p ${BUILD_DIR}
 	cc -o ${BUILD_DIR}/cerver ${COMPILE_FILES} ${COMPILE_FLAGS} 

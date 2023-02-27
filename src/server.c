@@ -77,14 +77,18 @@ int server_start(int port, struct thread_pool *tp)
 
     while (should_run)
     {
-        client_fd = malloc(sizeof(int));
-        *client_fd = accept(server_descriptor, (struct sockaddr *)&client, (socklen_t *)&client_addr_size);
+        // client_fd = malloc(sizeof(int));
+        int client_fd = accept(server_descriptor, (struct sockaddr *)&client, (socklen_t *)&client_addr_size);
         if (client_fd < 0)
         {
             perror("ERR: ");
             continue;
         }
-        printf("New connection :D\n");
+        if (client_fd == NULL)
+        {
+            // free(client_fd);
+            continue;
+        }
         thread_pool_add_work(tp, handler_worker, (void *)client_fd);
     }
 

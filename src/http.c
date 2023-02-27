@@ -27,8 +27,8 @@ int http_parse_req(char *http_req, int len, struct http_req *req)
     }
     struct http_header *header_buf;
     header_buf = (struct http_header *)calloc(1, HEADER_BUF_SIZE);
-
-    char *token = strtok(http_req, "\r\n");
+    char *http_req_save_ptr = NULL;
+    char *token = strtok_r(http_req, "\r\n", &http_req_save_ptr);
     if (token == NULL)
     {
         return -1;
@@ -41,7 +41,7 @@ int http_parse_req(char *http_req, int len, struct http_req *req)
     int hc = 0;
     while (1)
     {
-        token = strtok(NULL, "\r\n");
+        token = strtok_r(http_req_save_ptr, "\r\n", &http_req_save_ptr);
         if (token == NULL)
             break;
         if (hc >= HEADER_BUF_SIZE - 1)
@@ -87,10 +87,10 @@ int http_parse_req(char *http_req, int len, struct http_req *req)
     }
 
     char *type, *path, *http_ver;
-
-    char *r_type = strtok(req_line, " ");
-    char *r_path = strtok(NULL, " ");
-    char *r_http_ver = strtok(NULL, " ");
+    char *save_ptr;
+    char *r_type = strtok_r(req_line, " ", &save_ptr);
+    char *r_path = strtok_r(save_ptr, " ", &save_ptr);
+    char *r_http_ver = strtok_r(save_ptr, " ", &save_ptr);
 
     type = (char *)malloc((strlen(r_type) + 1) * sizeof(char));
     path = (char *)malloc((strlen(r_path) + 1) * sizeof(char));
@@ -146,12 +146,9 @@ char *http_stringify_resp(struct http_resp *res)
     int headers_size;
 
     char *headers = http_stringify_headers(res->headers, res->header_count, &headers_size);
-    printf("Headers: %d\n%s\n", headers_size, headers);
     int content_len = strlen(res->content);
 
     int resp_size = headers_size + content_len + strlen(status_line);
-
-    printf("Response bytes %d\n", resp_size);
 
     char *response = calloc(1, resp_size);
     strncat(response, status_line, status_len);

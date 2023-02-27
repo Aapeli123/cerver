@@ -1,7 +1,5 @@
 #include "thread_pool.h"
 
-
-
 struct thread_pool_work *thread_pool_create_job(thread_func_t job, void *arg)
 {
     struct thread_pool_work *work;
@@ -47,7 +45,7 @@ static struct thread_pool_work *thread_pool_get_work(struct thread_pool *tp)
     return work;
 }
 
-static void* tpool_worker(void *arg)
+static void *tpool_worker(void *arg)
 {
     struct thread_pool *tp = arg;
     struct thread_pool_work *work;
@@ -68,6 +66,7 @@ static void* tpool_worker(void *arg)
         pthread_mutex_unlock(tp->work_mutex);
         if (work != NULL)
         {
+            printf("Thread starting work on fd %d\n", (int)work->arg);
             work->func(work->arg);
             thread_pool_destroy_job(work);
         }
@@ -87,11 +86,13 @@ static void* tpool_worker(void *arg)
     return 0;
 }
 
-struct thread_pool* thread_pool_create(int threads) {
-    struct thread_pool* tp;
+struct thread_pool *thread_pool_create(int threads)
+{
+    struct thread_pool *tp;
     pthread_t thread;
 
-    if(threads == 0) {
+    if (threads == 0)
+    {
         threads = DEFAULT_THREAD_COUNT;
     }
 
@@ -101,8 +102,6 @@ struct thread_pool* thread_pool_create(int threads) {
     tp->work_mutex = malloc(sizeof(pthread_mutex_t));
     tp->work_cond = malloc(sizeof(pthread_cond_t));
     tp->working_cond = malloc(sizeof(pthread_cond_t));
-
-
 
     pthread_mutex_init(tp->work_mutex, NULL);
     pthread_cond_init(tp->work_cond, NULL);
@@ -115,21 +114,24 @@ struct thread_pool* thread_pool_create(int threads) {
     {
         pthread_create(&thread, NULL, tpool_worker, tp);
         pthread_detach(thread);
-
     }
     return tp;
 }
 
-void thread_pool_add_work(struct thread_pool* tp, thread_func_t func, void* arg) {
-    struct thread_pool_work* work;
+void thread_pool_add_work(struct thread_pool *tp, thread_func_t func, void *arg)
+{
+    struct thread_pool_work *work;
 
     work = thread_pool_create_job(func, arg);
-    
+
     pthread_mutex_lock(tp->work_mutex);
-    if(tp->first == NULL) {
+    if (tp->first == NULL)
+    {
         tp->first = work;
         tp->last = tp->first;
-    } else {
+    }
+    else
+    {
         tp->last->next = work;
         tp->last = work;
     }
@@ -137,26 +139,32 @@ void thread_pool_add_work(struct thread_pool* tp, thread_func_t func, void* arg)
     pthread_mutex_unlock(tp->work_mutex);
 }
 
-void thread_pool_wait(struct thread_pool* tp) {
-    if(tp==NULL)
+void thread_pool_wait(struct thread_pool *tp)
+{
+    if (tp == NULL)
         return;
-    
+
     pthread_mutex_lock(tp->work_mutex);
-    while(1) {
-        if((!tp->stop && tp->working_cnt != 0) || (tp->stop && tp->thread_count != 0)) {
+    while (1)
+    {
+        if ((!tp->stop && tp->working_cnt != 0) || (tp->stop && tp->thread_count != 0))
+        {
             pthread_cond_wait(tp->working_cond, tp->work_mutex);
-        } else {
+        }
+        else
+        {
             break;
         }
     }
     pthread_mutex_unlock(tp->work_mutex);
 }
 
-void thread_pool_destroy(struct thread_pool* tp) {
+void thread_pool_destroy(struct thread_pool *tp)
+{
     struct thread_pool_work *work;
     struct thread_pool_work *work2;
 
-    if(tp==NULL)
+    if (tp == NULL)
         return;
 
     pthread_mutex_lock(tp->work_mutex);
@@ -165,7 +173,7 @@ void thread_pool_destroy(struct thread_pool* tp) {
     {
         work2 = work->next;
         thread_pool_destroy_job(work);
-        work = work2; 
+        work = work2;
     }
     tp->stop = true;
     pthread_cond_broadcast(tp->work_cond);
@@ -182,6 +190,4 @@ void thread_pool_destroy(struct thread_pool* tp) {
     free(tp->working_cond);
 
     free(tp);
-
-    
 }
