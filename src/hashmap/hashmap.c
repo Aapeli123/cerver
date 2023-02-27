@@ -82,7 +82,7 @@ char *hashmap_get(hashmap_t *hashmap, char *key)
     bucket_t *b = hashmap->buckets[index];
     while (b->key != key)
     {
-        if (b->next != NULL)
+        if (b->next == NULL)
         {
             return NULL; // WTF
         }
