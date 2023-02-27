@@ -20,12 +20,6 @@ void handle_sigint()
     exit(0);
 }
 
-void handle_segv()
-{
-    printf("Oh shit i think this should have not happened :(\n");
-    clean();
-    exit(SIGSEGV);
-}
 
 int main()
 {
@@ -35,7 +29,6 @@ int main()
 
     signal(SIGINT, handle_sigint);
     signal(SIGTERM, handle_sigint);
-    signal(SIGSEGV, handle_segv);
     server_start(8080, thread_pool);
     thread_pool_destroy(thread_pool);
     return 0;
