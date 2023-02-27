@@ -84,6 +84,7 @@ int server_start(int port, struct thread_pool *tp)
             perror("ERR: ");
             continue;
         }
+#pragma GCC diagnostic ignored "-Wint-to-pointer-cast"
         thread_pool_add_work(tp, handler_worker, (void *)client_fd);
     }
 

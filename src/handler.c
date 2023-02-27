@@ -27,6 +27,7 @@ int handle_request(char *req_buffer, int req_size, int client_fd)
 
 void handler_worker(void *client_fd)
 {
+#pragma GCC diagnostic ignored "-Wpointer-to-int-cast"
     int fd = (int)client_fd; // It's an int, source: "Trust me bro"
     char *buffer = (char *)calloc(1, BUFFER_SIZE);
     if (buffer == NULL)
