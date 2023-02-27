@@ -20,7 +20,7 @@ void server_cleanup()
     printf("Cleaning up...\n");
     printf("Shutting down server socket\n");
     shutdown(server_descriptor, SHUT_RDWR);
-
+    close(server_descriptor);
     SSL_CTX_free(tls_context);
 }
 

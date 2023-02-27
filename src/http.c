@@ -33,6 +33,7 @@ int http_parse_req(char *http_req, int len, struct http_req *req)
     char *token = strtok_r(http_req, "\r\n", &http_req_save_ptr);
     if (token == NULL)
     {
+        header_buf_free(header_buf, 0);
         return -1;
     }
     int reqline_len = strlen(token) + 1;
