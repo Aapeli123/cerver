@@ -48,12 +48,7 @@ int http_parse_req(char *http_req, int len, struct http_req *req)
             break;
         if (hc >= HEADER_BUF_SIZE - 1)
         {
-            for (int i = 0; i < hc - 1; i++)
-            {
-                free(header_buf[i].key);
-                free(header_buf[i].value);
-            }
-            free(header_buf);
+            header_buf_free(header_buf, hc);
             free(req_line);
             return 1;
         }
@@ -69,6 +64,7 @@ int http_parse_req(char *http_req, int len, struct http_req *req)
         char *val = (char *)malloc(val_len * sizeof(char));
         if (val == NULL)
         {
+            header_buf_free(header_buf, hc);
             printf("FUCK!!\n");
             return 1;
         }
@@ -78,6 +74,8 @@ int http_parse_req(char *http_req, int len, struct http_req *req)
         char *key = (char *)malloc(key_len * sizeof(char));
         if (val == NULL)
         {
+            header_buf_free(header_buf, hc);
+
             printf("FUCK!!\n");
             return 1;
         }
@@ -107,6 +105,8 @@ int http_parse_req(char *http_req, int len, struct http_req *req)
     req->path = path;
     req->http_ver = http_ver;
     req->header_count = hc;
+
+    free(req_line);
     return 0;
 }
 
