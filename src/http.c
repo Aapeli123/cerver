@@ -17,6 +17,8 @@ void http_req_free(struct http_req *req)
     free(req->path);
     free(req->type);
     free(req->http_ver);
+
+    free(req);
 }
 
 int http_parse_req(char *http_req, int len, struct http_req *req)

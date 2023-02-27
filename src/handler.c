@@ -16,7 +16,7 @@ int handle_request(char *req_buffer, int req_size, int client_fd)
     int r = http_parse_req(req_buffer, req_size, req);
     if (r < 0)
     {
-        free(req);
+        http_req_free(req);
         free(resp);
         return -1;
     }
