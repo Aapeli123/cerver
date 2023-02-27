@@ -1,7 +1,6 @@
-#include <hashmap.h>
+#include "hashmap.h"
 
 // The following is a very simple implementation of a hash map with a string key and a string value
-
 hashmap_t *create_hashmap(int initial_buckets)
 {
     hashmap_t *map = calloc(1, sizeof(hashmap_t));
@@ -13,9 +12,22 @@ hashmap_t *create_hashmap(int initial_buckets)
     return map;
 }
 
+// Destroys bucket and all following buckets in its linked list
+static void destroy_bucket(bucket_t *bucket)
+{
+    if (bucket->next != NULL)
+    {
+        destroy_bucket(bucket->next);
+    }
+
+    free(bucket->key);
+    free(bucket->value);
+    free(bucket);
+}
+
 static void rehash(hashmap_t *hashmap, int new_bucket_count)
 {
-    int old_bucket_count = hashmap->bucket_count;
+    //     int old_bucket_count = hashmap->bucket_count;
     if (new_bucket_count <= hashmap->bucket_count)
     {
         return;
@@ -66,7 +78,7 @@ void hashmap_remove(hashmap_t *hashmap, char *key)
 
 char *hashmap_get(hashmap_t *hashmap, char *key)
 {
-    int index = hash(key, hashmap);
+    int index = hash(key, hashmap->bucket_count);
     bucket_t *b = hashmap->buckets[index];
     while (b->key != key)
     {
@@ -74,23 +86,11 @@ char *hashmap_get(hashmap_t *hashmap, char *key)
         {
             return NULL; // WTF
         }
-        b != b->next;
+        b = b->next;
     }
     return b->value;
 }
 
-// Destroys bucket and all following buckets in its linked list
-static void destroy_bucket(bucket_t *bucket)
-{
-    if (bucket->next != NULL)
-    {
-        destroy_bucket(bucket->next);
-    }
-
-    free(bucket->key);
-    free(bucket->value);
-    free(bucket);
-}
 void hashmap_destroy(hashmap_t *hashmap)
 {
     for (int i = 0; i < hashmap->bucket_count; i++)
