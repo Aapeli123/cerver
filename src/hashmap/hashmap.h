@@ -15,6 +15,7 @@ struct Bucket
 
 typedef struct Bucket bucket_t;
 
+// Very simple implementation of a hash map with a string key and a string value
 struct HashMap
 {
     int bucket_count;

@@ -1,6 +1,5 @@
 #include "hashmap.h"
 
-// The following is a very simple implementation of a hash map with a string key and a string value
 hashmap_t *create_hashmap(int initial_buckets)
 {
     hashmap_t *map = calloc(1, sizeof(hashmap_t));
@@ -27,10 +26,25 @@ static void destroy_bucket(bucket_t *bucket)
 
 static void rehash(hashmap_t *hashmap, int new_bucket_count)
 {
-    //     int old_bucket_count = hashmap->bucket_count;
+    // Do nothing if bucket count would decrease as we do not allow such things
     if (new_bucket_count <= hashmap->bucket_count)
     {
         return;
+    }
+    // Copy the bucket array to a new location in memory:
+    bucket_t **temp_buckets = (bucket_t **)calloc(hashmap->bucket_count, sizeof(bucket_t *));
+    memcpy(temp_buckets, hashmap->buckets, hashmap->bucket_count * sizeof(bucket_t *));
+    int old_bucket_count = hashmap->bucket_count;
+
+    // Allocate more memory for hashmap buckets and zero it:
+    hashmap->buckets = realloc(hashmap->buckets, new_bucket_count);
+
+    for (int i = 0; i < old_bucket_count; i++)
+    {
+        if (temp_buckets[i] == NULL)
+            continue;
+
+        int new_hash = hash(temp_buckets[i]->key, new_bucket_count);
     }
 }
 
