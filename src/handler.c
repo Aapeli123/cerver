@@ -21,7 +21,7 @@ int handle_request(char *req_buffer, int req_size, int client_fd)
     }
     write_response(client_fd, resp, strlen(resp) + 1);
     free(resp);
-
+    free(req);
     return 0;
 }
 
@@ -45,6 +45,7 @@ void handler_worker(void *client_fd)
     }
     handle_request(buffer, n, fd);
     shutdown(fd, SHUT_RDWR);
+    close(fd);
     free(buffer);
     // free(fd);
 }

@@ -30,7 +30,7 @@ void handle_segv()
 int main()
 {
     printf("Starting Cerver...\n");
-    thread_pool = thread_pool_create(4);
+    thread_pool = thread_pool_create(20);
     printf("Thread pool created\n");
 
     signal(SIGINT, handle_sigint);

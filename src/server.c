@@ -46,7 +46,7 @@ int server_bind(int port)
 
 int server_listen()
 {
-    int err = listen(server_descriptor, 2048);
+    int err = listen(server_descriptor, 512);
     return err;
 }
 

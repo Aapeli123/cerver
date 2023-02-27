@@ -1,6 +1,7 @@
 #ifndef HANDLER_H
 #define HANDLER_H
 #include <stdio.h>
+#include <unistd.h>
 
 #include "response.h"
 #include "http.h"
