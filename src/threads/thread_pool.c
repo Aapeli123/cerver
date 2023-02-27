@@ -66,7 +66,6 @@ static void *tpool_worker(void *arg)
         pthread_mutex_unlock(tp->work_mutex);
         if (work != NULL)
         {
-            printf("Thread starting work on fd %d\n", (int)work->arg);
             work->func(work->arg);
             thread_pool_destroy_job(work);
         }

@@ -73,7 +73,7 @@ int server_start(int port, struct thread_pool *tp)
 
     // Accept connections
     struct sockaddr_in client;
-    int *client_fd, client_addr_size = sizeof(struct sockaddr_in);
+    int client_addr_size = sizeof(struct sockaddr_in);
 
     while (should_run)
     {
@@ -82,11 +82,6 @@ int server_start(int port, struct thread_pool *tp)
         if (client_fd < 0)
         {
             perror("ERR: ");
-            continue;
-        }
-        if (client_fd == NULL)
-        {
-            // free(client_fd);
             continue;
         }
         thread_pool_add_work(tp, handler_worker, (void *)client_fd);

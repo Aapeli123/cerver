@@ -17,7 +17,7 @@ int handle_request(char *req_buffer, int req_size, int client_fd)
     if (r < 0)
     {
         free(resp);
-        return;
+        return -1;
     }
     write_response(client_fd, resp, strlen(resp) + 1);
     free(resp);
@@ -27,7 +27,7 @@ int handle_request(char *req_buffer, int req_size, int client_fd)
 
 void handler_worker(void *client_fd)
 {
-    int fd = (int)client_fd;
+    int fd = (int)client_fd; // It's an int, source: "Trust me bro"
     char *buffer = (char *)calloc(1, BUFFER_SIZE);
     if (buffer == NULL)
     {
@@ -40,7 +40,6 @@ void handler_worker(void *client_fd)
         perror("ERR");
         shutdown(fd, SHUT_RDWR);
         free(buffer);
-        free(fd);
         return;
     }
     handle_request(buffer, n, fd);
