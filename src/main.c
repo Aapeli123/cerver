@@ -3,7 +3,7 @@
 #include "server.h"
 #include "http.h"
 #include "threads/thread_pool.h"
-
+#include "config/config.h"
 
 struct thread_pool *thread_pool;
 
@@ -23,6 +23,9 @@ void handle_sigint()
 
 int main()
 {
+
+    config_read("./test.config");
+    exit(0);
 
     printf("Starting Cerver...\n");
     thread_pool = thread_pool_create(20);
