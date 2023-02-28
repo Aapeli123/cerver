@@ -27,5 +27,6 @@ void config_read(const char* path) {
         parse_config_line(buffer);
     }
     free(buffer);
+    fclose(file);
 }
 
