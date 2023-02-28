@@ -1,5 +1,7 @@
+#ifndef PRIMES_H
+#define PRIMES_H
 // For Hashmap bucket counts
-const int primes[] =
+static const int primes[] =
 {
     7,
     11,
@@ -143,3 +145,4 @@ const int primes[] =
     608903,
     658753
 };
+#endif

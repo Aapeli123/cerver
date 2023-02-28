@@ -28,4 +28,10 @@ struct HashMap
 
 typedef struct HashMap hashmap_t;
 
+hashmap_t *hashmap_create();
+void hashmap_add(hashmap_t *hashmap, char *key, char *value);
+void hashmap_remove(hashmap_t *hashmap, char *key);
+char *hashmap_get(hashmap_t *hashmap, char *key);
+void hashmap_destroy(hashmap_t *hashmap);
+
 #endif

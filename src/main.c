@@ -4,6 +4,7 @@
 #include "http.h"
 #include "threads/thread_pool.h"
 
+
 struct thread_pool *thread_pool;
 
 void clean()
@@ -20,9 +21,9 @@ void handle_sigint()
     exit(0);
 }
 
-
 int main()
 {
+
     printf("Starting Cerver...\n");
     thread_pool = thread_pool_create(20);
     printf("Thread pool created\n");
