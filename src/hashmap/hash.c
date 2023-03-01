@@ -9,5 +9,5 @@ int hash(char *str, int nbuckets)
         mult = (i % 4 == 0) ? 1 : mult * 256;
         sum += str[i] * mult;
     }
-    return (int)(abs(sum % nbuckets));
+    return (int)(labs(sum % nbuckets));
 }
