@@ -14,6 +14,10 @@ static void parse_config_line(char* line) {
         // Set the root dir where to look for pages
     } else if(!strcmp(command, "include")) {
         // Include another config file
+    } else if(!strcmp(command, "ssl") || !strcmp(command, "tls")){
+        printf("SSL is not yet implemented");
+        return;
+        // Use tls
     } else {
         printf("Failed to parse line: %s. Unknown command.\n", line);
         return;
@@ -29,4 +33,6 @@ void config_read(const char* path) {
     free(buffer);
     fclose(file);
 }
+
+
 
