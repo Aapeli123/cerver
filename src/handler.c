@@ -35,15 +35,21 @@ void handler_worker(void *client_fd)
     {
         return;
     }
+    int n = 0;
+    int bufSize = BUFFER_SIZE;
+    do {
+        n = read(fd, buffer, bufSize);
+        if (n == -1)
+        {
+            perror("ERR");
+            shutdown(fd, SHUT_RDWR);
+            free(buffer);
+            return;
+        }
+        // TODO extend buffer if size is too small
+    } while(n == BUFFER_SIZE);
+    
 
-    int n = read(fd, buffer, BUFFER_SIZE);
-    if (n == -1)
-    {
-        perror("ERR");
-        shutdown(fd, SHUT_RDWR);
-        free(buffer);
-        return;
-    }
     handle_request(buffer, n, fd);
     shutdown(fd, SHUT_RDWR);
     close(fd);
