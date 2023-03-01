@@ -39,8 +39,15 @@ void handler_worker(void *client_fd)
     int i = 0;
     int bufSize = BUFFER_SIZE;
     do {
+        if(bufSize >= 1024 * 1000) { // Max req size is 1000 KB
+            shutdown(fd, SHUT_RDWR);
+            free(buffer);
+            printf("ERR: Req from fd %d was too long. Aborting...\n", fd);
+            return;
+        }
         buffer = realloc(buffer, bufSize);
         n = read(fd, buffer + BUFFER_SIZE * sizeof(char) * i, BUFFER_SIZE);
+        
         if (n == -1)
         {
             perror("ERR");
@@ -50,7 +57,6 @@ void handler_worker(void *client_fd)
         }
         bufSize += BUFFER_SIZE;
         i++;
-        // TODO extend buffer if size is too small
     } while(n == BUFFER_SIZE);
     
 
