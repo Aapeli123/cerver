@@ -6,7 +6,7 @@
 #include "response.h"
 #include "http.h"
 
-#define BUFFER_SIZE 5
+#define BUFFER_SIZE 1024
 
 
 int handle_request(char* req_buffer, int req_size, int client_fd);

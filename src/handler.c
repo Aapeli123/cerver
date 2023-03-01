@@ -36,9 +36,11 @@ void handler_worker(void *client_fd)
         return;
     }
     int n = 0;
+    int i = 0;
     int bufSize = BUFFER_SIZE;
     do {
-        n = read(fd, buffer, bufSize);
+        buffer = realloc(buffer, bufSize);
+        n = read(fd, buffer + BUFFER_SIZE * sizeof(char) * i, BUFFER_SIZE);
         if (n == -1)
         {
             perror("ERR");
@@ -46,11 +48,13 @@ void handler_worker(void *client_fd)
             free(buffer);
             return;
         }
+        bufSize += BUFFER_SIZE;
+        i++;
         // TODO extend buffer if size is too small
     } while(n == BUFFER_SIZE);
     
 
-    handle_request(buffer, n, fd);
+    handle_request(buffer, bufSize, fd);
     shutdown(fd, SHUT_RDWR);
     close(fd);
     free(buffer);
