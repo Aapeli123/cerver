@@ -24,8 +24,8 @@ void handle_sigint()
 int main()
 {
 
-    config_read("./test.config");
-    exit(0);
+    // config_read("./test.config");
+    // exit(0);
 
     printf("Starting Cerver...\n");
     thread_pool = thread_pool_create(20);

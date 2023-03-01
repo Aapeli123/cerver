@@ -36,7 +36,7 @@ void handler_worker(void *client_fd)
         return;
     }
 
-    int n = recv(fd, buffer, BUFFER_SIZE, 0);
+    int n = read(fd, buffer, BUFFER_SIZE);
     if (n == -1)
     {
         perror("ERR");
