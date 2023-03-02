@@ -1,7 +1,6 @@
 #include <signal.h>
 
 #include "server.h"
-#include "http.h"
 #include "threads/thread_pool.h"
 #include "config/config.h"
 
