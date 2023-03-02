@@ -12,6 +12,7 @@
 struct Config
 {
     int port;
+    int threads;
     char* root_dir;
     char* fallback_page;
     hashmap_t* route_map;

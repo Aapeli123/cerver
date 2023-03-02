@@ -20,3 +20,7 @@ void command_root(char* root) {
 void command_fallback(char* fallback_file_path) {
 
 }
+
+void command_threads(char* thread_count) {
+    
+}

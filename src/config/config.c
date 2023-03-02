@@ -24,11 +24,14 @@ static void parse_config_line(char* line) {
         // Set the root dir where to look for pages
         char* rootpage = strtok(NULL, " ");
         command_root(rootpage);
+    } else if(!strcmp(command, "threads")) {
+        char* threads = strtok(NULL, " ");
+        command_threads(threads);
     } else if(!strcmp(command, "include")) {
         // Include another config file
         char* path = strtok(NULL, " ");
         config_read(path); // Just recursively parse the file
-    } else if(!strcmp(command, "ssl") || !strcmp(command, "tls")){
+    }  else if(!strcmp(command, "ssl") || !strcmp(command, "tls")){
         // Use tls
         printf("SSL is not yet implemented");
         return;

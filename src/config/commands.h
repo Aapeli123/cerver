@@ -11,5 +11,7 @@ void command_header(char* header_key, char* header_value);
 void command_root(char* root);
 // Set the fallback page (Error 404)
 void command_fallback(char* fallback_file_path);
+// Set the threadpool thread count
+void command_threads(char* thread_count);
 
 #endif
