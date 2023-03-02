@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
-#include "hashmap/hashmap.h"
+#include "../hashmap/hashmap.h"
 
 #include "commands.h"
 
