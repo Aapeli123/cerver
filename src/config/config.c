@@ -1,6 +1,22 @@
 #include "config.h"
 
-static void parse_config_line(char* line) {
+
+config_t *config_create() {
+    config_t* c = calloc(1, sizeof(config_t));
+    hashmap_t* route_map = hashmap_create();
+    hashmap_t* header_map = hashmap_create();
+    c->route_map = route_map;
+    c->header_map  = header_map;
+    return c;
+}
+
+void config_destroy(config_t* c) {
+    hashmap_destroy(c->header_map);
+    hashmap_destroy(c->route_map);
+    free(c);
+}
+
+static void parse_config_line(char* line, config_t* config) {
     char* command = strtok(line, " ");
     if(!strcmp(command, "loc")) {
         // Configure page(s) for a location
@@ -30,10 +46,10 @@ static void parse_config_line(char* line) {
     } else if(!strcmp(command, "include")) {
         // Include another config file
         char* path = strtok(NULL, " ");
-        config_read(path); // Just recursively parse the file
+        config_read(path, config); // Just recursively parse the file
     }  else if(!strcmp(command, "ssl") || !strcmp(command, "tls")){
         // Use tls
-        printf("SSL is not yet implemented");
+        printf("SSL is not yet implemented!\n");
         return;
     } else {
         printf("Failed to parse line: %s. Unknown command %s.\n", line, command);
@@ -41,7 +57,7 @@ static void parse_config_line(char* line) {
     }
 }
 
-void config_read(const char* path) {
+void config_read(const char* path, config_t* config) {
     printf("\nReading config file %s\n", path);
     char* buffer = calloc(1, sizeof(char)*1024);   
     FILE* file = fopen(path, "r");
@@ -54,7 +70,7 @@ void config_read(const char* path) {
             continue;
 
         printf("Parsing line: %s",buffer);
-        parse_config_line(buffer);
+        parse_config_line(buffer, config);
     }
 
     printf("\nConfig reading done...\n");

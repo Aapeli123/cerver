@@ -1,6 +1,9 @@
 # Vscode generated folder:
 .vscode
 
+# JetBrains IDE config folders:
+.idea
+
 # Build folder:
 /out
 

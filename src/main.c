@@ -4,13 +4,16 @@
 #include "threads/thread_pool.h"
 #include "config/config.h"
 
-struct thread_pool *thread_pool;
+threadpool_t *thread_pool = NULL;
+config_t* config = NULL;
 
 void clean()
 {
     server_cleanup();
     if (thread_pool != NULL)
         thread_pool_destroy(thread_pool);
+    if(config != NULL)
+        config_destroy(config);
 }
 
 void handle_sigint()
@@ -22,8 +25,8 @@ void handle_sigint()
 
 int main()
 {
-
-    config_read("./test.config");
+    config = config_create();
+    config_read("./test.config", config);
 
     printf("Starting Cerver...\n");
     thread_pool = thread_pool_create(20);
@@ -33,5 +36,6 @@ int main()
     signal(SIGTERM, handle_sigint);
     server_start(8080, thread_pool);
     thread_pool_destroy(thread_pool);
+    config_destroy(config);
     return 0;
 }

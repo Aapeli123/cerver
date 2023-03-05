@@ -21,7 +21,8 @@ struct Config
 };
 
 typedef struct Config config_t;
+config_t* config_create();
+void config_destroy(config_t* c);
 
-
-void config_read(const char* path);
+void config_read(const char* path, config_t* config);
 #endif

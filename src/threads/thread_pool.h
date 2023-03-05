@@ -31,6 +31,8 @@ struct thread_pool
     bool stop;
 };
 
+typedef struct thread_pool threadpool_t;
+
 struct thread_pool* thread_pool_create(int threads);
 void thread_pool_wait(struct thread_pool* tp);
 void thread_pool_destroy(struct thread_pool* tp);
