@@ -1,9 +1,16 @@
 #include "commands.h"
 
+static void wildcard_location_parser(char* path, char* location, config_t* config) {
+    // TODO Either the path or location string has wildcard and needs to be processed further
 
+}
 
 void command_location(char* path, char* location, config_t* config) {
-
+    if(strchr(path, '*') != NULL || strchr(location, '*') != NULL) {
+        wildcard_location_parser(path, location, config);
+        return;
+    }
+    hashmap_add(config->route_map, path, "TODO");
 }
 
 void command_port(char* port, config_t* config) {
