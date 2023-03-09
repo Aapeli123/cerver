@@ -25,7 +25,8 @@ void command_header(char* header_key, char* header_value, config_t* config) {
         config->headers = realloc(config->headers, (config->header_count + 1)*sizeof(struct http_header*));
     }
     struct http_header *header =  calloc(1, sizeof (struct http_header));
-
+    header->key = calloc(1, sizeof (char)* strlen(header_key) + 1);
+    header->value = calloc(1, sizeof (char)* strlen(header_value) + 1);
     strcpy(header->key, header_key);
     strcpy(header->value, header_value);
     config->headers[config->header_count] = header;
@@ -40,7 +41,7 @@ void command_root(char* root, config_t* config) {
 
 void command_fallback(char* fallback_file_path, config_t* config) {
     config->fallback_page = malloc((strlen(fallback_file_path) + 1 )*sizeof(char));
-    strcpy(config->root_dir, fallback_file_path);
+    strcpy(config->fallback_page, fallback_file_path);
 }
 
 void command_threads(char* thread_count, config_t* config) {
