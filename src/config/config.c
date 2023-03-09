@@ -1,7 +1,5 @@
 #include "config.h"
 
-
-
 static void parse_config_line(char* line, config_t* config) {
     char* command = strtok(line, " ");
     if(!strcmp(command, "loc")) {

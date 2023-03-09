@@ -13,7 +13,7 @@ void header_buf_free(struct http_header *headers, int n)
 void http_req_free(struct http_req *req)
 {
     header_buf_free(req->headers, req->header_count);
-
+    
     free(req->path);
     free(req->type);
     free(req->http_ver);
@@ -36,7 +36,7 @@ int http_parse_req(char *http_req, int len, struct http_req *req)
         header_buf_free(header_buf, 0);
         return -1;
     }
-    int reqline_len = strlen(token) + 1;
+    int reqline_len = (int)strlen(token) + 1;
     char *req_line = (char *)(malloc(reqline_len * sizeof(char)));
 
     strcpy(req_line, token);

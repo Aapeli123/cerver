@@ -2,7 +2,8 @@
 #define COMMANDS_H
 
 #include "config_t.h"
-
+#include "../dir/dir.h"
+#include "../dir/filereader.h"
 // Set location for a path
 void command_location(char* path, char* location, config_t* config);
 // Set the server port

@@ -44,21 +44,23 @@ static char** get_dir_files(char* path, bool recurse, char** files, int offset) 
     int file_count = count_dir_files(path, false);
     while((entry = readdir(directory))) {
         char* filepth = calloc(PATH_MAX, sizeof(char));
-        sprintf(filepth,"%s/%s", path,entry->d_name);
+        sprintf(filepth,"%s%s", path,entry->d_name);
         stat(filepth, &filestat);
         free(filepth);
         if(S_ISDIR(filestat.st_mode)) {
             if(!recurse) continue;
             if(!strcmp(".", entry->d_name) || !strcmp("..", entry->d_name)) continue;
             char* r_path = calloc(PATH_MAX, sizeof(char));
-            sprintf(r_path,"%s/%s", path,entry->d_name);
+            sprintf(r_path,"%s%s/", path,entry->d_name);
             get_dir_files(r_path, true, files,offset + file_count);
             free(r_path);
         } else {
-            char* dest = calloc(1,(strlen(entry->d_name))*sizeof(char) + strlen(path) *sizeof(char) + 1 + 1);
-            sprintf(dest, "%s/%s",path,entry->d_name);
+            char* dest = calloc(1,(strlen(entry->d_name))*sizeof(char) + strlen(path) *sizeof(char) + 1);
+            sprintf(dest, "%s%s",path,entry->d_name);
             // strcpy(dest, entry->d_name);
             files[offset + i] = dest;
+            i+=1;
+
         }
     }
     closedir(directory);

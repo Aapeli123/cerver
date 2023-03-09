@@ -1,5 +1,15 @@
 #include "commands.h"
 
+static char* getFileName(char* filepath) {
+    char* token = strtok(filepath, "/");
+    char* prev = NULL;
+    while(token != NULL) {
+        prev = token;
+        token = strtok(NULL, "/");
+    }
+    return prev;
+}
+
 static void wildcard_location_parser(char* path, char* location, config_t* config) {
     // Path is the requested path and location is the location of the file to be served:
     bool path_has_wildcard = strchr(path, '*') != NULL;
@@ -17,7 +27,34 @@ static void wildcard_location_parser(char* path, char* location, config_t* confi
         return;
     }
     if(path_has_wildcard && location_has_wildcard) {
-        // map the paths to match
+        char* path_prefix = strtok(path, "*");
+        char* loc_prefix = strtok(location, "*");
+
+
+        char* dir_path = calloc(strlen(path_prefix) + strlen(config->root_dir) + 1, sizeof(char));
+        strcat(dir_path, config->root_dir);
+        strcat(dir_path, path_prefix);
+        dir_t* dir = read_directory(dir_path, path_has_double_wildcard);
+        for (int i = 0; i < dir->files; i++) {
+            char* file = dir->file_list[i];
+            char* contents = read_file_to_memory(file);
+            if(location_has_double_wildcard) {
+                char* filepath_relative = &file[strlen(config->root_dir)];
+                hashmap_add(config->route_map, filepath_relative, contents);
+                free(contents);
+                continue;
+            }
+            char* filename = getFileName(file);
+            printf("%s\n", file);
+            int len = (int)strlen(filename) + (int)strlen(path_prefix) + 1;
+            char data[len];
+            memset(data, 0, len);
+            sprintf(data, "%s%s", path_prefix, filename);
+            hashmap_add(config->route_map, data, contents);
+            free(contents);
+        }
+        destroy_directory(dir);
+        free(dir_path);
     }
 
     // TODO Either the path or location string has wildcard and needs to be processed further
@@ -54,8 +91,8 @@ void command_header(char* header_key, char* header_value, config_t* config) {
 
 
 void command_root(char* root, config_t* config) {
-    config->root_dir = malloc((strlen(root) + 1 )*sizeof(char));
-    strcpy(config->root_dir, root);
+    config->root_dir = malloc((strlen(root) )*sizeof(char) - 1);
+    strncpy(config->root_dir, root, strlen(root ) - 1);
 }
 
 void command_fallback(char* fallback_file_path, config_t* config) {
