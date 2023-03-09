@@ -33,10 +33,10 @@ static int count_dir_files(char* path, bool recurse) {
 
 
 
-static char** get_dir_files(char* path, bool recurse, char** files, int offset) {
+static void get_dir_files(char* path, bool recurse, char** files, int offset) {
     DIR* directory = opendir(path);
     if(directory == NULL) {
-        return NULL;
+        return;
     }
     struct dirent *entry;
     struct stat filestat;

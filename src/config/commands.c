@@ -30,8 +30,6 @@ static void wildcard_location_parser(char* path, char* location, config_t* confi
     }
     if(path_has_wildcard && location_has_wildcard) {
         char* path_prefix = strtok(path, "*");
-        char* loc_prefix = strtok(location, "*");
-
 
         char* dir_path = calloc(strlen(path_prefix) + strlen(config->root_dir) + 1, sizeof(char));
         strcat(dir_path, config->root_dir);
