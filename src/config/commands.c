@@ -1,6 +1,25 @@
 #include "commands.h"
 
 static void wildcard_location_parser(char* path, char* location, config_t* config) {
+    // Path is the requested path and location is the location of the file to be served:
+    bool path_has_wildcard = strchr(path, '*') != NULL;
+    bool path_has_double_wildcard = strstr(path, "**") != NULL;
+
+    bool location_has_wildcard = strchr(location, '*') != NULL;
+    bool location_has_double_wildcard = strstr(location, "**") != NULL;
+
+    if(path_has_wildcard && !location_has_wildcard) {
+        hashmap_add(config->route_map, path, "TODO");
+        return;
+    }
+    if(!path_has_wildcard && location_has_wildcard) {
+        printf("Arguments to loc %s %s don't make any sense!\n", path, location);
+        return;
+    }
+    if(path_has_wildcard && location_has_wildcard) {
+        // map the paths to match
+    }
+
     // TODO Either the path or location string has wildcard and needs to be processed further
 
 }
