@@ -12,7 +12,17 @@ void command_port(char* port, config_t* config) {
 }
 
 void command_header(char* header_key, char* header_value, config_t* config) {
+    if(config->headers == NULL) {
+        config->headers = malloc(1 * sizeof (struct http_header*));
+    } else {
+        config->headers = realloc(config->headers, (config->header_count + 1)*sizeof(struct http_header*));
+    }
+    struct http_header *header =  calloc(1, sizeof (struct http_header));
 
+    strcpy(header->key, header_key);
+    strcpy(header->value, header_value);
+    config->headers[config->header_count] = header;
+    config->header_count += 1;
 }
 
 

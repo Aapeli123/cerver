@@ -5,6 +5,7 @@
 #ifndef CONFIG_T_H
 #define CONFIG_T_H
 #include "../hashmap/hashmap.h"
+#include "../http.h"
 
 struct Config
 {
@@ -13,7 +14,8 @@ struct Config
     char* root_dir;
     char* fallback_page;
     hashmap_t* route_map;
-    hashmap_t* header_map;
+    struct http_header** headers;
+    int header_count;
     bool ssl;
 };
 
