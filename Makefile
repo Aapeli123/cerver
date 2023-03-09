@@ -4,7 +4,7 @@ COMPILE_FILES := $(shell find ${SOURCE_DIR} -name '*.c')
 COMPILE_FLAGS := -lssl -pthread -Wall
 COMPILE_FLAGS_DBG := -g
 COMPILE_FLAGS_PROD := -O3
-CC := clang
+CC := gcc
 build:
 	mkdir -p ${BUILD_DIR}/release
 	${CC} -o ${BUILD_DIR}/release/cerver ${COMPILE_FILES} ${COMPILE_FLAGS} ${COMPILE_FLAGS_PROD}
