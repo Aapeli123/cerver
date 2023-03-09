@@ -19,7 +19,9 @@ static void wildcard_location_parser(char* path, char* location, config_t* confi
     bool location_has_double_wildcard = strstr(location, "**") != NULL;
 
     if(path_has_wildcard && !location_has_wildcard) {
-        hashmap_add(config->route_map, path, "TODO");
+        char* contents = read_file_to_memory(path);
+        hashmap_add(config->route_map, path, contents);
+        free(contents);
         return;
     }
     if(!path_has_wildcard && location_has_wildcard) {
@@ -57,8 +59,6 @@ static void wildcard_location_parser(char* path, char* location, config_t* confi
         free(dir_path);
     }
 
-    // TODO Either the path or location string has wildcard and needs to be processed further
-
 }
 
 void command_location(char* path, char* location, config_t* config) {
@@ -66,7 +66,13 @@ void command_location(char* path, char* location, config_t* config) {
         wildcard_location_parser(path, location, config);
         return;
     }
-    hashmap_add(config->route_map, path, "TODO");
+    char file_path_abs[strlen(config->root_dir) + strlen(location)];
+    memset(file_path_abs, 0, strlen(config->root_dir) + strlen(location));
+    memcpy(file_path_abs, config->root_dir, strlen(config->root_dir));
+    memcpy(&(file_path_abs[strlen(config->root_dir)]), location, strlen(location) - 1);
+    char* contents = read_file_to_memory(file_path_abs);
+    hashmap_add(config->route_map, path, contents);
+    free(contents);
 }
 
 void command_port(char* port, config_t* config) {
