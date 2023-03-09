@@ -1,17 +1,19 @@
 #ifndef COMMANDS_H
 #define COMMANDS_H
 
+#include "config_t.h"
+
 // Set location for a path
-void command_location(char* path, char* location);
+void command_location(char* path, char* location, config_t* config);
 // Set the server port
-void command_port(char* port);
+void command_port(char* port, config_t* config);
 // Set a http header for all requests
-void command_header(char* header_key, char* header_value);
+void command_header(char* header_key, char* header_value, config_t* config);
 // Set the root folder where to look for files
-void command_root(char* root);
+void command_root(char* root, config_t* config);
 // Set the fallback page (Error 404)
-void command_fallback(char* fallback_file_path);
+void command_fallback(char* fallback_file_path, config_t* config);
 // Set the threadpool thread count
-void command_threads(char* thread_count);
+void command_threads(char* thread_count, config_t* config);
 
 #endif

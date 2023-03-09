@@ -8,3 +8,6 @@
 /out
 
 *.out
+
+# Directory for testing the directory parsing functions:
+/testdir

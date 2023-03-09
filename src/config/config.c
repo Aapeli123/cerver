@@ -1,20 +1,6 @@
 #include "config.h"
 
 
-config_t *config_create() {
-    config_t* c = calloc(1, sizeof(config_t));
-    hashmap_t* route_map = hashmap_create();
-    hashmap_t* header_map = hashmap_create();
-    c->route_map = route_map;
-    c->header_map  = header_map;
-    return c;
-}
-
-void config_destroy(config_t* c) {
-    hashmap_destroy(c->header_map);
-    hashmap_destroy(c->route_map);
-    free(c);
-}
 
 static void parse_config_line(char* line, config_t* config) {
     char* command = strtok(line, " ");
@@ -22,27 +8,27 @@ static void parse_config_line(char* line, config_t* config) {
         // Configure page(s) for a location
         char* path = strtok(NULL, " ");
         char* location = strtok(NULL, " ");
-        command_location(path, location);
+        command_location(path, location, config);
     } else if(!strcmp(command, "port")) {
         // Set the server port
         char* port = strtok(NULL, " ");
-        command_port(port);
+        command_port(port, config);
     } else if(!strcmp(command, "header")) {
         // Set http header
         char* key = strtok(NULL, " ");
         char* val = strtok(NULL, " ");
-        command_header(key, val);
+        command_header(key, val, config);
     } else if(!strcmp(command, "fallback")) {
         // Fallback page (Error 404)
         char* errpage = strtok(NULL, " ");
-        command_fallback(errpage);
+        command_fallback(errpage, config);
     } else if(!strcmp(command, "root")) {
         // Set the root dir where to look for pages
         char* rootpage = strtok(NULL, " ");
-        command_root(rootpage);
+        command_root(rootpage, config);
     } else if(!strcmp(command, "threads")) {
         char* threads = strtok(NULL, " ");
-        command_threads(threads);
+        command_threads(threads, config);
     } else if(!strcmp(command, "include")) {
         // Include another config file
         char* path = strtok(NULL, " ");

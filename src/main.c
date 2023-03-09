@@ -3,7 +3,6 @@
 #include "server.h"
 #include "threads/thread_pool.h"
 #include "config/config.h"
-
 threadpool_t *thread_pool = NULL;
 config_t* config = NULL;
 
@@ -24,7 +23,7 @@ void handle_sigint()
 }
 
 int main()
-{
+{;
     config = config_create();
     config_read("./test.config", config);
 

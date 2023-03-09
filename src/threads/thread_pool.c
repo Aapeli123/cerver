@@ -98,6 +98,7 @@ struct thread_pool *thread_pool_create(int threads)
     tp = calloc(1, sizeof(struct thread_pool));
     tp->thread_count = threads;
 
+
     tp->work_mutex = malloc(sizeof(pthread_mutex_t));
     tp->work_cond = malloc(sizeof(pthread_cond_t));
     tp->working_cond = malloc(sizeof(pthread_cond_t));
@@ -187,6 +188,5 @@ void thread_pool_destroy(struct thread_pool *tp)
     free(tp->work_mutex);
     free(tp->work_cond);
     free(tp->working_cond);
-
     free(tp);
 }

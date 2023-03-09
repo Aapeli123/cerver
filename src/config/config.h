@@ -6,23 +6,9 @@
 #include <string.h>
 #include <stdbool.h>
 #include "../hashmap/hashmap.h"
-
+#include "config_t.h"
 #include "commands.h"
 
-struct Config
-{
-    int port;
-    int threads;
-    char* root_dir;
-    char* fallback_page;
-    hashmap_t* route_map;
-    hashmap_t* header_map;
-    bool ssl;
-};
-
-typedef struct Config config_t;
-config_t* config_create();
-void config_destroy(config_t* c);
 
 void config_read(const char* path, config_t* config);
 #endif

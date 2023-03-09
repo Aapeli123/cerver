@@ -27,7 +27,6 @@ struct thread_pool
 
     size_t working_cnt;
     size_t thread_count;
-
     bool stop;
 };
 
