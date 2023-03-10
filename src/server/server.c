@@ -14,6 +14,14 @@ struct sockaddr_in server_addr;
 char *buffer;
 bool should_run = true;
 SSL_CTX *tls_context;
+pthread_mutex_t* tls_context_mutex;
+void write_data(int fd) {
+
+}
+
+void read_data(int fd) {
+
+}
 
 void server_cleanup()
 {
@@ -21,7 +29,12 @@ void server_cleanup()
     printf("Shutting down server socket\n");
     shutdown(server_descriptor, SHUT_RDWR);
     close(server_descriptor);
-    SSL_CTX_free(tls_context);
+    if(config->ssl) {
+        SSL_CTX_free(tls_context);
+        pthread_mutex_destroy(tls_context_mutex);
+        free(tls_context_mutex);
+    }
+
 }
 
 int server_create_socket()
@@ -52,11 +65,37 @@ int server_listen()
 
 int init()
 {
-    tls_context = SSL_CTX_new(TLS_method());
-    if (tls_context == NULL)
+    if(!config->ssl) return 0; // Don't allocate ssl context if ssl is not enabled:
+    printf("Enabling TLS\n");
+    SSL_library_init();
+    OpenSSL_add_all_algorithms();
+    SSL_load_error_strings();
+    const SSL_METHOD *method = TLS_server_method();
+    tls_context = SSL_CTX_new(method);
+    if ( tls_context == NULL )
     {
+        ERR_print_errors_fp(stderr);
         return -1;
     }
+
+    if(SSL_CTX_use_certificate_file(tls_context, "./public.pem", SSL_FILETYPE_PEM) <= 0) {
+        ERR_print_errors_fp(stderr);
+        return -1;
+    }
+    if(SSL_CTX_use_PrivateKey_file(tls_context, "./private.pem", SSL_FILETYPE_PEM) <= 0) {
+        ERR_print_errors_fp(stderr);
+        return -1;
+    }
+
+    if ( !SSL_CTX_check_private_key(tls_context) )
+    {
+        printf( "Private key does not match the public certificate\n");
+        return -1;
+    }
+    tls_context_mutex = malloc(sizeof(pthread_mutex_t));
+    pthread_mutex_init(tls_context_mutex, NULL);
+    printf("TLS Enabled\n");
+
     return 0;
 }
 
@@ -79,11 +118,18 @@ int server_start(struct thread_pool *tp)
     {
         // client_fd = malloc(sizeof(int));
         int client_fd = accept(server_descriptor, (struct sockaddr *)&client, (socklen_t *)&client_addr_size);
+
         if (client_fd < 0)
         {
             perror("ERR: ");
             continue;
         }
+        if(config->ssl) {
+#pragma GCC diagnostic ignored "-Wint-to-pointer-cast"
+            thread_pool_add_work(tp,handler_ssl_worker, (void*)client_fd);
+            continue;
+        }
+
 #pragma GCC diagnostic ignored "-Wint-to-pointer-cast"
         thread_pool_add_work(tp, handler_worker, (void *)client_fd);
     }

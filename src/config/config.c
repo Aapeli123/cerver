@@ -33,7 +33,7 @@ static void parse_config_line(char* line, config_t* config) {
         config_read(path, config); // Just recursively parse the file
     }  else if(!strcmp(command, "ssl") || !strcmp(command, "tls")){
         // Use tls
-        printf("SSL is not yet implemented!\n");
+        command_ssl(config);
         return;
     } else {
         printf("Failed to parse line: %s. Unknown command %s.\n", line, command);

@@ -11,3 +11,7 @@
 
 # Directory for testing the directory parsing functions:
 /testdir
+
+# Testing certificates.
+private.pem
+public.pem

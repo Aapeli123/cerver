@@ -1,7 +1,7 @@
 BUILD_DIR := ./out
 SOURCE_DIR := ./src
 COMPILE_FILES := $(shell find ${SOURCE_DIR} -name '*.c')
-COMPILE_FLAGS := -lssl -pthread -Wall
+COMPILE_FLAGS := -lssl -lcrypto -pthread -Wall
 COMPILE_FLAGS_DBG := -g
 COMPILE_FLAGS_PROD := -O3
 CC := gcc

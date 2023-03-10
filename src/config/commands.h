@@ -16,5 +16,6 @@ void command_root(char* root, config_t* config);
 void command_fallback(char* fallback_file_path, config_t* config);
 // Set the threadpool thread count
 void command_threads(char* thread_count, config_t* config);
-
+// Enable ssl
+void command_ssl(config_t* config);
 #endif

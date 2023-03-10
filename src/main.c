@@ -44,6 +44,9 @@ int main()
     signal(SIGTERM, handle_sigint);
     signal(SIGSTOP, handle_sigint);
 
+    signal(SIGPIPE, SIG_IGN);
+
+
     // Start the server
     server_start(thread_pool);
 

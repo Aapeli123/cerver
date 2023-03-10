@@ -127,3 +127,7 @@ void command_threads(char* thread_count, config_t* config) {
     int threads = (int)strtol(thread_count, NULL, 10);
     config->threads = threads;
 }
+
+void command_ssl(config_t* config) {
+   config->ssl = true;
+}

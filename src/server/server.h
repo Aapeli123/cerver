@@ -10,6 +10,7 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <openssl/ssl.h>
+#include <openssl/err.h>
 
 #include "handler.h"
 #include "../threads/thread_pool.h"
