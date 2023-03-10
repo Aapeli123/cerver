@@ -1,5 +1,12 @@
 #include "commands.h"
 
+static char* getAbsPath(char* root, char* path) {
+    char* abs_path = calloc(strlen(root) * strlen(path) + 1, sizeof(char));
+    strcat(abs_path, root);
+    strcat(abs_path, path);
+    return abs_path;
+}
+
 static char* getFileName(char* filepath) {
     char* token = strtok(filepath, "/");
     char* prev = NULL;
@@ -105,8 +112,11 @@ void command_root(char* root, config_t* config) {
 }
 
 void command_fallback(char* fallback_file_path, config_t* config) {
-    config->fallback_page = malloc((strlen(fallback_file_path) + 1 )*sizeof(char));
-    strcpy(config->fallback_page, fallback_file_path);
+    char* fp = strtok(fallback_file_path,"\n");
+    char* abspath = getAbsPath(config->root_dir, fp);
+    char* fallback_content = read_file_to_memory(abspath);
+    free(abspath);
+    config->fallback_page = fallback_content;
 }
 
 void command_threads(char* thread_count, config_t* config) {

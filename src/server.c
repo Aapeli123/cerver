@@ -60,16 +60,16 @@ int init()
     return 0;
 }
 
-int server_start(int port, struct thread_pool *tp)
+int server_start(config_t* config, struct thread_pool *tp)
 {
     HANDLE_ERROR(init());
 
     // Start the server:
     HANDLE_ERROR(server_create_socket());
-    HANDLE_ERROR(server_bind(port));
+    HANDLE_ERROR(server_bind(config->port));
     HANDLE_ERROR(server_listen());
 
-    printf("Server listening on port %d\n", port);
+    printf("Server listening on port %d\n", config->port);
 
     // Accept connections
     struct sockaddr_in client;

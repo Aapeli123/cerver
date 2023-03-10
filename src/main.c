@@ -33,7 +33,7 @@ int main()
 
     signal(SIGINT, handle_sigint);
     signal(SIGTERM, handle_sigint);
-    server_start(8080, thread_pool);
+    server_start(config, thread_pool);
     thread_pool_destroy(thread_pool);
     config_destroy(config);
     return 0;

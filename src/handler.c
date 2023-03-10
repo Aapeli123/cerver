@@ -1,14 +1,31 @@
 #include "handler.h"
 
+static char* resolve_path(char* path) {
+    char* content = hashmap_get(config->route_map, path);
+    if(content!=NULL) return content;
+
+    char* path_wildcard = calloc(1, strlen(path) + 2);
+    strcat(path_wildcard, path);
+    strcat(path_wildcard, "*");
+
+    content = hashmap_get(config->route_map, path_wildcard);
+    free(path_wildcard);
+    if(content!=NULL) return content;
+
+    // TODO Resolve double wildcard path
+
+    return config->fallback_page;
+}
+
+
 int handle_request(char *req_buffer, int req_size, int client_fd)
 {
-    struct http_header headers[] = {{.key = "Content-Type", .value = "text/plain"}, {.key = "Content-Length", .value = "17"}};
-    struct http_resp res = {.content = "Welcome to cerver", .header_count = 2, .headers = headers, .http_ver = "HTTP/1.1", .status = 200, .reason_str = "OK"};
-    char *resp = http_stringify_resp(&res);
+//    struct http_resp res = {.content = "Welcome to cerver", .header_count = 2, .headers = headers, .http_ver = "HTTP/1.1", .status = 200, .reason_str = "OK"};
+    // char *resp = http_stringify_resp(&res);
     if (req_buffer == NULL)
     {
-        write_response(client_fd, resp, strlen(resp) + 1);
-        free(resp);
+        // write_response(client_fd, resp, strlen(resp) + 1);
+        // free(resp);
 
         return 0;
     }
@@ -17,9 +34,16 @@ int handle_request(char *req_buffer, int req_size, int client_fd)
     if (r < 0)
     {
         http_req_free(req);
-        free(resp);
+        // free(resp);
         return -1;
     }
+    printf("%s\n",req->path);
+    char* content = resolve_path(req->path);
+    int content_len = strlen(content);
+    char content_len_char[128];
+    sprintf(content_len_char, "%d", content_len);
+    struct http_header headers[] = {{.key = "Content-Type", .value = "text/html"}, {.key = "Content-Length", .value = content_len_char}};
+    char* resp = http_response_200(content, headers, 2);
     write_response(client_fd, resp, strlen(resp) + 1);
     free(resp);
     http_req_free(req);
@@ -66,3 +90,4 @@ void handler_worker(void *client_fd)
     free(buffer);
     // free(fd);
 }
+

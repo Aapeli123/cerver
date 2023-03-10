@@ -5,9 +5,11 @@
 
 #include "response.h"
 #include "http.h"
+#include "config/config_t.h"
 
 #define BUFFER_SIZE 1024
 
+extern config_t* config;
 
 int handle_request(char* req_buffer, int req_size, int client_fd);
 void handler_worker(void* client_fd);
