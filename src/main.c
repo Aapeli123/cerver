@@ -1,6 +1,7 @@
 #include <signal.h>
 
 #include "server.h"
+#include "mime/mime.h"
 #include "threads/thread_pool.h"
 #include "config/config.h"
 threadpool_t *thread_pool = NULL;
@@ -13,7 +14,7 @@ void clean()
         thread_pool_destroy(thread_pool);
     if(config != NULL)
         config_destroy(config);
-    http_clean_mimetable();
+    mime_table_destroy();
 }
 
 void handle_sigint()
@@ -24,20 +25,29 @@ void handle_sigint()
 }
 
 int main()
-{;
+{
+    printf("Starting Cerver...\n");
+
+    // Initialize lookup table for content types:
+    mime_table_init();
+
+    // Read the config file and cache relevant data
     config = config_create();
     config_read("./test.config", config);
 
-    printf("Starting Cerver...\n");
-    init_content_type_table();
+    // Start a thread pool
     thread_pool = thread_pool_create(config->threads);
     printf("Thread pool created\n");
 
+    // Bind signal handlers for clean exit
     signal(SIGINT, handle_sigint);
     signal(SIGTERM, handle_sigint);
+
+    // Start the server
     server_start(thread_pool);
+
+    // If somehow the server stops its loop, clean memory
     thread_pool_destroy(thread_pool);
-    http_clean_mimetable();
     config_destroy(config);
     return 0;
 }

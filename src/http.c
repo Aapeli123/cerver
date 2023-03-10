@@ -1,5 +1,4 @@
 #include "http.h"
-hashmap_t* CONTENT_TYPES;
 void header_buf_free(struct http_header *headers, int n)
 {
     for (int i = 0; i < n; i++)
@@ -162,29 +161,6 @@ char *http_stringify_resp(struct http_resp *res)
     free(status_line);
 
     return response;
-}
-
-void init_content_type_table() {
-    CONTENT_TYPES = hashmap_create();
-#define ADD_TYPE(filetype, content_type) hashmap_add(CONTENT_TYPES, filetype, content_type, strlen(content_type) + 1);
-    ADD_TYPE("html","text/html");
-    ADD_TYPE("js","text/javascript");
-    ADD_TYPE("css","text/css");
-    ADD_TYPE("txt","text/plain");
-    ADD_TYPE("json","application/json");
-    ADD_TYPE("jpg","image/jpeg");
-    ADD_TYPE("png","image/png");
-    ADD_TYPE("pdf","application/pdf");
-#undef ADD_TYPE
-}
-
-char* get_content_type(char* filetype) {
-    return hashmap_get(CONTENT_TYPES, filetype);
-}
-
-void http_clean_mimetable() {
-    if(CONTENT_TYPES != NULL)
-        hashmap_destroy(CONTENT_TYPES);
 }
 
 // Get the http response string for 200 OK with the content 'content'
