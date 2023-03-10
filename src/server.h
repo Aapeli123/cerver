@@ -21,6 +21,6 @@ int server_create_socket();
 int server_bind(int port);
 int server_listen();
 int init();
-int server_start(config_t *config, struct thread_pool* tp);
+int server_start(struct thread_pool* tp);
 
 #endif

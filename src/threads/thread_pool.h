@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <pthread.h>
 #include <stdbool.h>
+#include <stdio.h>
 
 #define DEFAULT_THREAD_COUNT 4
 

@@ -9,7 +9,7 @@
 
 #define HEADER_BUF_SIZE 2048
 
-static hashmap_t* CONTENT_TYPES = NULL;
+extern hashmap_t* CONTENT_TYPES;
 
 struct http_header
 {

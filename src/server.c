@@ -60,7 +60,7 @@ int init()
     return 0;
 }
 
-int server_start(config_t* config, struct thread_pool *tp)
+int server_start(struct thread_pool *tp)
 {
     HANDLE_ERROR(init());
 

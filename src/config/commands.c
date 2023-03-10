@@ -31,7 +31,8 @@ static void wildcard_location_parser(char* path, char* location, config_t* confi
         strcat(abs_path, config->root_dir);
         strcat(abs_path, locpath);
         char* contents = read_file_to_memory(abs_path);
-        hashmap_add(config->route_map, path, contents);
+        HASHMAP_ADD_STRING(config->route_map, path, contents);
+        //hashmap_add(config->route_map, path, contents, strlen(contents) + 1);
         free(contents);
         free(abs_path);
         return;
@@ -52,7 +53,8 @@ static void wildcard_location_parser(char* path, char* location, config_t* confi
             char* contents = read_file_to_memory(file);
             if(location_has_double_wildcard) {
                 char* filepath_relative = &file[strlen(config->root_dir)];
-                hashmap_add(config->route_map, filepath_relative, contents);
+                HASHMAP_ADD_STRING(config->route_map, filepath_relative, contents);
+                // hashmap_add(config->route_map, filepath_relative, contents);
                 free(contents);
                 continue;
             }
@@ -62,7 +64,8 @@ static void wildcard_location_parser(char* path, char* location, config_t* confi
             char data[len];
             memset(data, 0, len);
             sprintf(data, "%s%s", path_prefix, filename);
-            hashmap_add(config->route_map, data, contents);
+            HASHMAP_ADD_STRING(config->route_map, data, contents);
+            // hashmap_add(config->route_map, data, contents);
             free(contents);
         }
         destroy_directory(dir);
@@ -81,7 +84,8 @@ void command_location(char* path, char* location, config_t* config) {
     memcpy(file_path_abs, config->root_dir, strlen(config->root_dir));
     memcpy(&(file_path_abs[strlen(config->root_dir)]), location, strlen(location) - 1);
     char* contents = read_file_to_memory(file_path_abs);
-    hashmap_add(config->route_map, path, contents);
+    HASHMAP_ADD_STRING(config->route_map, path, contents);
+    // hashmap_add(config->route_map, path, contents);
     free(contents);
 }
 

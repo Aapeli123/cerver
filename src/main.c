@@ -35,7 +35,7 @@ int main()
 
     signal(SIGINT, handle_sigint);
     signal(SIGTERM, handle_sigint);
-    server_start(config, thread_pool);
+    server_start(thread_pool);
     thread_pool_destroy(thread_pool);
     http_clean_mimetable();
     config_destroy(config);

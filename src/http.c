@@ -1,5 +1,5 @@
 #include "http.h"
-
+hashmap_t* CONTENT_TYPES;
 void header_buf_free(struct http_header *headers, int n)
 {
     for (int i = 0; i < n; i++)
@@ -166,7 +166,7 @@ char *http_stringify_resp(struct http_resp *res)
 
 void init_content_type_table() {
     CONTENT_TYPES = hashmap_create();
-#define ADD_TYPE(filetype, content_type) hashmap_add(CONTENT_TYPES, filetype, content_type)
+#define ADD_TYPE(filetype, content_type) hashmap_add(CONTENT_TYPES, filetype, content_type, strlen(content_type) + 1);
     ADD_TYPE("html","text/html");
     ADD_TYPE("js","text/javascript");
     ADD_TYPE("css","text/css");

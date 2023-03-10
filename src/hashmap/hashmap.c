@@ -61,6 +61,7 @@ static void rehash(hashmap_t *hashmap, int new_bucket_count)
     
 
     hashmap->bucket_count = new_bucket_count;
+    hashmap->value_count = 0;
 
     for (int i = 0; i < old_bucket_count; i++)
     {
@@ -69,7 +70,7 @@ static void rehash(hashmap_t *hashmap, int new_bucket_count)
         bucket_t *cur = temp_buckets[i];
         do
         {
-            hashmap_add(hashmap, cur->key, cur->value);
+            hashmap_add(hashmap, cur->key, cur->value, cur->val_size);
             cur = cur->next;
         } while (cur != NULL);
         destroy_bucket(temp_buckets[i]);
@@ -77,15 +78,15 @@ static void rehash(hashmap_t *hashmap, int new_bucket_count)
     free(temp_buckets);
 }
 
-void hashmap_add(hashmap_t *hashmap, char *key, char *value)
+void hashmap_add(hashmap_t *hashmap, char *key, void* value, int val_size)
 {
 
     char* k, *v;
     k = calloc(1, sizeof(char) * (strlen(key) + 1));
-    v = calloc(1, sizeof(char) * (strlen(value) + 1));
+    v = calloc(1, val_size);
 
     strcpy(k, key);
-    strcpy(v, value);
+    memmove(v,value,val_size);
 
     double load_factor = (double)hashmap->value_count / (double)hashmap->bucket_count;
     if (load_factor >= 0.55f)
@@ -98,6 +99,7 @@ void hashmap_add(hashmap_t *hashmap, char *key, char *value)
     bucket_t *bucket = calloc(1, sizeof(bucket_t));
     bucket->key = k;
     bucket->value = v;
+    bucket->val_size = val_size;
     if(hashmap->buckets[index] == NULL) {
         hashmap->buckets[index] = bucket;
         hashmap->value_count++;
@@ -144,7 +146,7 @@ void hashmap_remove(hashmap_t *hashmap, char *key)
     hashmap->value_count--;
 }
 
-char *hashmap_get(hashmap_t *hashmap, char *key)
+void *hashmap_get(hashmap_t *hashmap, char *key)
 {
     int index = hash(key, hashmap->bucket_count);
     bucket_t *b = hashmap->buckets[index];

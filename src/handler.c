@@ -1,14 +1,14 @@
 #include "handler.h"
 
 static char* resolve_path(char* path) {
-    char* content = hashmap_get(config->route_map, path);
+    char* content = (char*)hashmap_get(config->route_map, path);
     if(content!=NULL) return content;
 
     char* path_wildcard = calloc(1, strlen(path) + 2);
     strcat(path_wildcard, path);
     strcat(path_wildcard, "*");
 
-    content = hashmap_get(config->route_map, path_wildcard);
+    content = (char*)hashmap_get(config->route_map, path_wildcard);
     free(path_wildcard);
     if(content!=NULL) return content;
 
