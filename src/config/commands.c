@@ -19,9 +19,14 @@ static void wildcard_location_parser(char* path, char* location, config_t* confi
     bool location_has_double_wildcard = strstr(location, "**") != NULL;
 
     if(path_has_wildcard && !location_has_wildcard) {
-        char* contents = read_file_to_memory(path);
+        char* locpath = strtok(location, "\n");
+        char* abs_path = calloc(sizeof(char),(strlen(locpath) + strlen(config->root_dir)) + 1);
+        strcat(abs_path, config->root_dir);
+        strcat(abs_path, locpath);
+        char* contents = read_file_to_memory(abs_path);
         hashmap_add(config->route_map, path, contents);
         free(contents);
+        free(abs_path);
         return;
     }
     if(!path_has_wildcard && location_has_wildcard) {
