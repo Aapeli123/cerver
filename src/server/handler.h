@@ -4,9 +4,9 @@
 #include <unistd.h>
 
 #include "response.h"
-#include "http.h"
-#include "config/config_t.h"
-#include "mime/mime.h"
+#include "../http/http.h"
+#include "../config/config_t.h"
+#include "../mime/mime.h"
 
 #define BUFFER_SIZE 1024
 

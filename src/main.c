@@ -1,6 +1,6 @@
 #include <signal.h>
 
-#include "server.h"
+#include "server/server.h"
 #include "mime/mime.h"
 #include "threads/thread_pool.h"
 #include "config/config.h"

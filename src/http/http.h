@@ -5,7 +5,7 @@
 #include <string.h>
 #include <stdlib.h>
 
-#include "hashmap/hashmap.h"
+#include "../hashmap/hashmap.h"
 
 #define HEADER_BUF_SIZE 2048
 

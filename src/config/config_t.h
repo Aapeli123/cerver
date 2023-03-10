@@ -5,7 +5,7 @@
 #ifndef CONFIG_T_H
 #define CONFIG_T_H
 #include "../hashmap/hashmap.h"
-#include "../http.h"
+#include "../http/http.h"
 
 struct Config
 {

@@ -12,8 +12,8 @@
 #include <openssl/ssl.h>
 
 #include "handler.h"
-#include "threads/thread_pool.h"
-#include "config/config_t.h"
+#include "../threads/thread_pool.h"
+#include "../config/config_t.h"
 
 
 void server_cleanup();
