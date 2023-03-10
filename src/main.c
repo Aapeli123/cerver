@@ -42,6 +42,7 @@ int main()
     // Bind signal handlers for clean exit
     signal(SIGINT, handle_sigint);
     signal(SIGTERM, handle_sigint);
+    signal(SIGSTOP, handle_sigint);
 
     // Start the server
     server_start(thread_pool);
