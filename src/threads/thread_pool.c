@@ -87,6 +87,7 @@ static void *tpool_worker(void *arg)
 
 struct thread_pool *thread_pool_create(int threads)
 {
+    printf("Creating a thread pool with %d threads\n", threads);
     struct thread_pool *tp;
     pthread_t thread;
 

@@ -164,6 +164,29 @@ char *http_stringify_resp(struct http_resp *res)
     return response;
 }
 
+void init_content_type_table() {
+    CONTENT_TYPES = hashmap_create();
+#define ADD_TYPE(filetype, content_type) hashmap_add(CONTENT_TYPES, filetype, content_type)
+    ADD_TYPE("html","text/html");
+    ADD_TYPE("js","text/javascript");
+    ADD_TYPE("css","text/css");
+    ADD_TYPE("txt","text/plain");
+    ADD_TYPE("json","application/json");
+    ADD_TYPE("jpg","image/jpeg");
+    ADD_TYPE("png","image/png");
+    ADD_TYPE("pdf","application/pdf");
+#undef ADD_TYPE
+}
+
+char* get_content_type(char* filetype) {
+    return hashmap_get(CONTENT_TYPES, filetype);
+}
+
+void http_clean_mimetable() {
+    if(CONTENT_TYPES != NULL)
+        hashmap_destroy(CONTENT_TYPES);
+}
+
 // Get the http response string for 200 OK with the content 'content'
 char* http_response_200(char* content, struct http_header* headers, int header_count) {
     struct http_resp res = {.content = content, .header_count = header_count, .headers = headers, .http_ver = "HTTP/1.1", .status = 200, .reason_str = "OK"};

@@ -11,6 +11,7 @@ config_t *config_create() {
     // hashmap_t* header_map = hashmap_create();
     c->route_map = route_map;
     c->headers = NULL;
+    c->threads = 0;
     // c->header_map  = header_map;
     return c;
 }

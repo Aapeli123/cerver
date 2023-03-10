@@ -13,6 +13,7 @@ void clean()
         thread_pool_destroy(thread_pool);
     if(config != NULL)
         config_destroy(config);
+    http_clean_mimetable();
 }
 
 void handle_sigint()
@@ -28,13 +29,15 @@ int main()
     config_read("./test.config", config);
 
     printf("Starting Cerver...\n");
-    thread_pool = thread_pool_create(20);
+    init_content_type_table();
+    thread_pool = thread_pool_create(config->threads);
     printf("Thread pool created\n");
 
     signal(SIGINT, handle_sigint);
     signal(SIGTERM, handle_sigint);
     server_start(config, thread_pool);
     thread_pool_destroy(thread_pool);
+    http_clean_mimetable();
     config_destroy(config);
     return 0;
 }

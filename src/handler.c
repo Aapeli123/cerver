@@ -37,7 +37,6 @@ int handle_request(char *req_buffer, int req_size, int client_fd)
         // free(resp);
         return -1;
     }
-    printf("%s\n",req->path);
     char* content = resolve_path(req->path);
     int content_len = strlen(content);
     char content_len_char[128];
