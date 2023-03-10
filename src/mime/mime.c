@@ -17,7 +17,18 @@ void mime_table_init() {
 #undef ADD_TYPE
 
 char* get_content_type(char* filetype) {
-    return hashmap_get(CONTENT_TYPES, filetype);
+    char* mime = hashmap_get(CONTENT_TYPES, filetype);
+    if(mime == NULL)
+        mime = DEFAULT_MIME;
+    return mime;
+}
+
+char* mime_for_filename(char* filename) {
+    strtok(filename, ".");
+    char* fileEnd = strtok(NULL, ".");
+    if(fileEnd == NULL)
+        return "text/html";
+    return get_content_type(fileEnd);
 }
 
 void mime_table_destroy() {

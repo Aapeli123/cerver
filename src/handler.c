@@ -38,10 +38,11 @@ int handle_request(char *req_buffer, int req_size, int client_fd)
         return -1;
     }
     char* content = resolve_path(req->path);
+    char* mime = mime_for_filename(req->path);
     int content_len = strlen(content);
     char content_len_char[128];
     sprintf(content_len_char, "%d", content_len);
-    struct http_header headers[] = {{.key = "Content-Type", .value = "text/html"}, {.key = "Content-Length", .value = content_len_char}};
+    struct http_header headers[] = {{.key = "Content-Type", .value = mime}, {.key = "Content-Length", .value = content_len_char}};
     char* resp = http_response_200(content, headers, 2);
     write_response(client_fd, resp, strlen(resp) + 1);
     free(resp);

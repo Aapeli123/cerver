@@ -6,6 +6,7 @@
 #include "response.h"
 #include "http.h"
 #include "config/config_t.h"
+#include "mime/mime.h"
 
 #define BUFFER_SIZE 1024
 
