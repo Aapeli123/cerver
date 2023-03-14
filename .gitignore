@@ -16,10 +16,12 @@
 private.pem
 public.pem
 
-# CMake auto generated shit
+# CMake auto generated files
 Makefile
 CMakeCache.txt
 cerver
 CMakeFiles
 cmake_install.cmake
 Testing
+CERVER.cbp
+.cmake
