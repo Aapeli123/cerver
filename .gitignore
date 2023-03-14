@@ -15,3 +15,11 @@
 # Testing certificates.
 private.pem
 public.pem
+
+# CMake auto generated shit
+Makefile
+CMakeCache.txt
+cerver
+CMakeFiles
+cmake_install.cmake
+Testing
