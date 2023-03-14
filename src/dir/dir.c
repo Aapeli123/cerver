@@ -33,14 +33,15 @@ static int count_dir_files(char* path, bool recurse) {
 
 
 
-static void get_dir_files(char* path, bool recurse, char** files, int offset) {
+static int get_dir_files(char* path, bool recurse, char** files, int offset) {
     DIR* directory = opendir(path);
     if(directory == NULL) {
-        return;
+        return -1;
     }
     struct dirent *entry;
     struct stat filestat;
     int i = 0;
+    int fc = 0;
     int file_count = count_dir_files(path, false);
     while((entry = readdir(directory))) {
         char* filepth = calloc(PATH_MAX, sizeof(char));
@@ -52,7 +53,7 @@ static void get_dir_files(char* path, bool recurse, char** files, int offset) {
             if(!strcmp(".", entry->d_name) || !strcmp("..", entry->d_name)) continue;
             char* r_path = calloc(PATH_MAX, sizeof(char));
             sprintf(r_path,"%s%s/", path,entry->d_name);
-            get_dir_files(r_path, true, files,offset + file_count);
+            fc += get_dir_files(r_path, true, files,offset + file_count + fc);
             free(r_path);
         } else {
             char* dest = calloc(1,(strlen(entry->d_name))*sizeof(char) + strlen(path) *sizeof(char) + 1);
@@ -64,6 +65,7 @@ static void get_dir_files(char* path, bool recurse, char** files, int offset) {
         }
     }
     closedir(directory);
+    return i;
 }
 
 dir_t *read_directory(char * path, bool recurse) {
