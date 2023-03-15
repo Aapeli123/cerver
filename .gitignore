@@ -16,10 +16,13 @@
 private.pem
 public.pem
 
+# Executables:
+cerver
+cerver.exe
+
 # CMake auto generated files
 Makefile
 CMakeCache.txt
-cerver
 CMakeFiles
 cmake_install.cmake
 Testing
