@@ -18,4 +18,6 @@ void command_fallback(char* fallback_file_path, config_t* config);
 void command_threads(char* thread_count, config_t* config);
 // Enable ssl
 void command_ssl(config_t* config);
+// Set SSL keys:
+void command_keys(char* pubkey, char* privkey, config_t* config);
 #endif

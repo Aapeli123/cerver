@@ -17,6 +17,8 @@ struct Config
     struct http_header** headers;
     int header_count;
     bool ssl;
+    char* pubkey;
+    char* privkey;
 };
 
 typedef struct Config config_t;

@@ -1,6 +1,7 @@
 #include "config.h"
 
 static void parse_config_line(char* line, config_t* config) {
+    line = strtok(line, "\n");
     char* command = strtok(line, " ");
     if(!strcmp(command, "loc")) {
         // Configure page(s) for a location
@@ -35,7 +36,11 @@ static void parse_config_line(char* line, config_t* config) {
         // Use tls
         command_ssl(config);
         return;
-    } else {
+    }  else if (!strcmp(command, "sslkeys")) {
+        char* pub = strtok(NULL, " ");
+        char* priv = strtok(NULL, " ");
+        command_keys(pub, priv, config);
+    }else {
         printf("Failed to parse line: %s. Unknown command %s.\n", line, command);
         return;
     }

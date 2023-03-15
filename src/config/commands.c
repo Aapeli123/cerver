@@ -82,7 +82,7 @@ void command_location(char* path, char* location, config_t* config) {
     char file_path_abs[strlen(config->root_dir) + strlen(location)];
     memset(file_path_abs, 0, strlen(config->root_dir) + strlen(location));
     memcpy(file_path_abs, config->root_dir, strlen(config->root_dir));
-    memcpy(&(file_path_abs[strlen(config->root_dir)]), location, strlen(location) - 1);
+    memcpy(&(file_path_abs[strlen(config->root_dir)]), location, strlen(location));
     char* contents = read_file_to_memory(file_path_abs);
     HASHMAP_ADD_STRING(config->route_map, path, contents);
     // hashmap_add(config->route_map, path, contents);
@@ -111,8 +111,8 @@ void command_header(char* header_key, char* header_value, config_t* config) {
 
 
 void command_root(char* root, config_t* config) {
-    config->root_dir = malloc((strlen(root) )*sizeof(char) - 1);
-    strncpy(config->root_dir, root, strlen(root ) - 1);
+    config->root_dir = malloc((strlen(root) )*sizeof(char));
+    strncpy(config->root_dir, root, strlen(root ));
 }
 
 void command_fallback(char* fallback_file_path, config_t* config) {
@@ -130,4 +130,12 @@ void command_threads(char* thread_count, config_t* config) {
 
 void command_ssl(config_t* config) {
    config->ssl = true;
+}
+
+void command_keys(char* pubkey, char* privkey,config_t* config) {
+    config->pubkey = malloc(strlen(pubkey) + 1);
+    strcpy(config->pubkey, pubkey);
+
+    config->privkey = malloc(strlen(privkey) + 1);
+    strcpy(config->privkey, privkey);
 }

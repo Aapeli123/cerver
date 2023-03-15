@@ -12,6 +12,12 @@ config_t *config_create() {
     c->route_map = route_map;
     c->headers = NULL;
     c->threads = 0;
+    c->root_dir = NULL;
+    c->fallback_page = NULL;
+    c->port = 8080;
+    c->header_count = 0;
+    c->pubkey = NULL;
+    c->privkey = NULL;
     // c->header_map  = header_map;
     return c;
 }
@@ -28,5 +34,7 @@ void config_destroy(config_t* c) {
     hashmap_destroy(c->route_map);
     free(c->fallback_page);
     free(c->root_dir);
+    free(c->pubkey);
+    free(c->privkey);
     free(c);
 }

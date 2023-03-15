@@ -78,11 +78,11 @@ int init()
         return -1;
     }
 
-    if(SSL_CTX_use_certificate_file(tls_context, "./public.pem", SSL_FILETYPE_PEM) <= 0) {
+    if(SSL_CTX_use_certificate_file(tls_context, config->pubkey, SSL_FILETYPE_PEM) <= 0) {
         ERR_print_errors_fp(stderr);
         return -1;
     }
-    if(SSL_CTX_use_PrivateKey_file(tls_context, "./private.pem", SSL_FILETYPE_PEM) <= 0) {
+    if(SSL_CTX_use_PrivateKey_file(tls_context, config->privkey, SSL_FILETYPE_PEM) <= 0) {
         ERR_print_errors_fp(stderr);
         return -1;
     }
