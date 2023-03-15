@@ -1,9 +1,11 @@
+
 #include <signal.h>
 
 #include "server/server.h"
 #include "mime/mime.h"
 #include "threads/thread_pool.h"
 #include "config/config.h"
+
 threadpool_t *thread_pool = NULL;
 config_t* config = NULL;
 
@@ -42,10 +44,10 @@ int main()
     // Bind signal handlers for clean exit
     signal(SIGINT, handle_sigint);
     signal(SIGTERM, handle_sigint);
+#ifndef WIN32
     signal(SIGSTOP, handle_sigint);
-
     signal(SIGPIPE, SIG_IGN);
-
+#endif
 
     // Start the server
     server_start(thread_pool);

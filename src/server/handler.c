@@ -1,7 +1,6 @@
 #include "handler.h"
 
 extern SSL_CTX* tls_context;
-extern pthread_mutex_t* tls_context_mutex;
 
 static char* resolve_path(char* path) {
     char* content = (char*)hashmap_get(config->route_map, path);

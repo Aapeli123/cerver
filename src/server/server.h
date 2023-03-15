@@ -7,8 +7,20 @@
 #include <string.h>
 #include <errno.h>
 
+#ifdef WIN32
+#include <winsock2.h>
+#include <windows.h>
+// system file contains definations of system calls
+// include<sys/socket.h>
+#include <winsock.h>
+//#inlude<netinet/in.h>
+#include <ws2tcpip.h>
+#include <ws2ipdef.h>
+#else
 #include <sys/socket.h>
 #include <netinet/in.h>
+#endif
+
 #include <openssl/ssl.h>
 #include <openssl/err.h>
 

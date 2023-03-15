@@ -37,3 +37,9 @@ find_package(OpenSSL REQUIRED)
 target_link_libraries(cerver PRIVATE OpenSSL::SSL)
 target_link_libraries(cerver PRIVATE OpenSSL::Crypto)
 
+# Winsock
+if (${CMAKE_SYSTEM_NAME} STREQUAL Windows)
+    message("Linking windows libs")
+    target_link_libraries(cerver PRIVATE ws2_32)
+    target_link_libraries(cerver PRIVATE wsock32)
+endif ()

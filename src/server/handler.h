@@ -10,6 +10,12 @@
 #include "../config/config_t.h"
 #include "../mime/mime.h"
 
+#ifndef SHUT_RDWR
+#define SHUT_RD   0x00
+#define SHUT_WR   0x01
+#define SHUT_RDWR 0x02
+#endif
+
 
 #define BUFFER_SIZE 1024
 
