@@ -3,6 +3,8 @@ cmake_minimum_required(VERSION 3.1.0)
 project(CERVER)
 
 set(SOURCE_FILES
+        src/main.c
+
         src/config/commands.c
         src/config/config.c
         src/config/config_t.c
@@ -23,7 +25,7 @@ set(SOURCE_FILES
 
         src/threads/thread_pool.c)
 
-add_executable(cerver src/main.c ${SOURCE_FILES})
+add_executable(cerver ${SOURCE_FILES})
 
 # Pthreads
 set(THREADS_PREFER_PTHREAD_FLAG ON)
