@@ -17,6 +17,7 @@ config_t *config_create() {
 }
 
 void config_destroy(config_t* c) {
+    printf("Freeing config\n");
     // hashmap_destroy(c->header_map);
     for (int i = 0; i < c->header_count; ++i) {
         free(c->headers[i]->key);

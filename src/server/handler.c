@@ -16,7 +16,6 @@ static char* resolve_path(char* path) {
     if(content!=NULL) return content;
 
     // TODO Resolve double wildcard path
-
     return config->fallback_page;
 }
 
@@ -47,6 +46,11 @@ int handle_request(char *req_buffer, int req_size, int client_fd, SSL* ssl)
     sprintf(content_len_char, "%d", content_len);
     struct http_header headers[] = {{.key = "Content-Type", .value = mime}, {.key = "Content-Length", .value = content_len_char}};
     char* resp = http_response_200(content, headers, 2);
+    if(resp == NULL) {
+        free(resp);
+        http_req_free(req);
+        return -1;
+    }
     if(config->ssl) {
         SSL_write(ssl, resp, strlen(resp) + 1);
     } else {
@@ -145,7 +149,7 @@ void handler_ssl_worker(void* client_fd) {
     } while(n == BUFFER_SIZE);
 
     handle_request(buffer, bufSize, 0, ssl);
-
+    free(buffer);
     SSL_shutdown(ssl);
     SSL_free(ssl);
     close(fd);

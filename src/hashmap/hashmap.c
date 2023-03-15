@@ -112,6 +112,8 @@ void hashmap_add(hashmap_t *hashmap, char *key, void* value, int val_size)
     }
     if(!strcmp(hashmap->buckets[index]->key, k)) {
         hashmap->value_count --;
+        destroy_bucket(bucket);
+        return;
     }
 
     hashmap->buckets[index] = bucket;
