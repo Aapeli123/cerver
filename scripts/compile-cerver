@@ -1,0 +1,14 @@
+#!/bin/bash
+
+echo "Building openssl for the library"
+chmod +x ./openssl/Configure
+cd openssl || exit
+if [[ " $* " == *" --windows "* ]]; then
+./Configure --cross-compile-prefix=x86_64-w64-mingw32- mingw64
+else
+./Configure
+fi
+
+make
+make test
+cd ..
