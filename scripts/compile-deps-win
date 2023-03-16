@@ -1,0 +1,13 @@
+#!/bin/bash
+cd openssl || exit
+./Configure D_FORTIFY_SOURCE=0 no-shared no-idea no-mdc2 no-rc5 no-asm no-legacy  mingw64 --cross-compile-prefix=x86_64-w64-mingw32-
+
+make clean
+make depend
+make
+
+mkdir -p ../lib
+cp libssl-3-x64.dll ../lib
+cp libcrypto-3-x64.dll ../lib
+
+cd ..

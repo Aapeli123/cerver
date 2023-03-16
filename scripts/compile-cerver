@@ -2,13 +2,16 @@
 
 echo "Building openssl for the library"
 chmod +x ./openssl/Configure
-cd openssl || exit
+
+chmod +x ./scripts/compile-deps-win
+chmod +x ./scripts/compile-deps-nix
+
 if [[ " $* " == *" --windows "* ]]; then
-./Configure --cross-compile-prefix=x86_64-w64-mingw32- mingw64
+  ./scripts/compile-deps-win
+  cmake -DCMAKE_TOOLCHAIN_FILE=./scripts/mingw-w64-x86_64.cmake .
 else
-./Configure
+  ./scripts/compile-deps-nix
+  cmake .
 fi
 
 make
-make test
-cd ..

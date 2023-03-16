@@ -7,6 +7,9 @@
 # Build folder:
 /out
 
+# Folder where needed libraries are built:
+/lib
+
 *.out
 
 # Directory for testing the directory parsing functions:

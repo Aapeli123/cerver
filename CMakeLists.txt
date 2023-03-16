@@ -33,9 +33,15 @@ find_package(Threads REQUIRED)
 target_link_libraries(cerver PRIVATE Threads::Threads)
 
 # Openssl
-find_package(OpenSSL REQUIRED)
-target_link_libraries(cerver PRIVATE OpenSSL::SSL)
-target_link_libraries(cerver PRIVATE OpenSSL::Crypto)
+target_include_directories(cerver PRIVATE ${PROJECT_SOURCE_DIR}/openssl/include)
+
+if (${CMAKE_SYSTEM_NAME} STREQUAL Windows)
+    target_link_libraries(cerver PRIVATE ${PROJECT_SOURCE_DIR}/lib/libssl-3-x64.dll ${PROJECT_SOURCE_DIR}/lib/libcrypto-3-x64.dll)
+else()
+    target_link_libraries(cerver PRIVATE ${PROJECT_SOURCE_DIR}/lib/libssl.so ${PROJECT_SOURCE_DIR}/lib/libcrypto.so)
+endif ()
+
+
 
 # Winsock
 if (${CMAKE_SYSTEM_NAME} STREQUAL Windows)

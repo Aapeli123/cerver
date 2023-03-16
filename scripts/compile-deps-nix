@@ -1,0 +1,12 @@
+#!/bin/bash
+
+cd openssl || exit
+./Configure
+
+make
+
+mkdir -p ./lib
+cp libssl.so ../lib
+cp libcrypto.so ../lib
+
+cd ..
