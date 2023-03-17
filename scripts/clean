@@ -1,0 +1,14 @@
+#!/bin/bash
+
+echo "Cleaning openssl."
+cd ./openssl || exit
+make clean
+cd ..
+
+echo "Cleaning built files"
+rm ./lib -rf
+rm ./out -rf
+rm cerver -rf
+rm cerver.exe -rf
+
+./scripts/clean_cmake_cache
