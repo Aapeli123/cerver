@@ -47,7 +47,7 @@ static void parse_config_line(char* line, config_t* config) {
 }
 
 void config_read(const char* path, config_t* config) {
-    printf("\nReading config file %s\n", path);
+    printf("\nReading config file %s\n\n", path);
     char* buffer = calloc(1, sizeof(char)*1024);   
     FILE* file = fopen(path, "r");
     while(fgets(buffer, 1024 - 1, file) != NULL) {
@@ -62,7 +62,7 @@ void config_read(const char* path, config_t* config) {
         parse_config_line(buffer, config);
     }
 
-    printf("\nConfig reading done...\n");
+    printf("\nConfig reading done...\n\n");
 
     free(buffer);
     fclose(file);

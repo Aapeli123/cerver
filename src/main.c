@@ -54,6 +54,7 @@ int main(int argv, char** argc)
 #endif
 
     // Start the server
+    printf("\nStarting the http server:\n");
     server_start(thread_pool);
 
     // If somehow the server stops its loop, clean memory
