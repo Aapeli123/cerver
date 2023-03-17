@@ -1,6 +1,9 @@
 #!/bin/bash
-
-echo "Building openssl for the library"
+echo "Cleaning cmake cache"
+rm CMakeCache.txt -f
+rm cmake_install.txt -f
+rm CMakeFiles -rf
+echo "Building openssl..."
 chmod +x ./openssl/Configure
 
 chmod +x ./scripts/compile-deps-win
