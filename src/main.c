@@ -26,8 +26,12 @@ void handle_sigint()
     exit(0);
 }
 
-int main()
+int main(int argv, char** argc)
 {
+    if(argv < 2) {
+        printf("Usage: ./cerver [config file]\n");
+        return 1;
+    }
     printf("Starting Cerver...\n");
 
     // Initialize lookup table for content types:
@@ -35,7 +39,7 @@ int main()
 
     // Read the config file and cache relevant data
     config = config_create();
-    config_read("./test.config", config);
+    config_read(argc[1], config);
 
     // Start a thread pool
     thread_pool = thread_pool_create(config->threads);
