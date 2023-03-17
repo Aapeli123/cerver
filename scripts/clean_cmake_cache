@@ -1,0 +1,5 @@
+#!/bin/bash
+echo "Cleaning cmake cache"
+rm CMakeCache.txt -f
+rm cmake_install.txt -f
+rm CMakeFiles -rf

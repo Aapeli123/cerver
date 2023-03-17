@@ -44,7 +44,9 @@ else()
 	target_link_libraries(cerver PRIVATE ${OPENSSL} ${CRYPTO})
 endif ()
 
-
+if(${CMAKE_BUILD_TYPE} STREQUAL Release)
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Ofast")
+endif ()
 
 # Winsock
 if (${CMAKE_SYSTEM_NAME} STREQUAL Windows)

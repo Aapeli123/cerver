@@ -168,3 +168,8 @@ char* http_response_200(char* content, struct http_header* headers, int header_c
     struct http_resp res = {.content = content, .header_count = header_count, .headers = headers, .http_ver = "HTTP/1.1", .status = 200, .reason_str = "OK"};
     return http_stringify_resp(&res);
 }
+
+char* http_response_404(char* content, struct http_header* headers, int header_count) {
+    struct http_resp res = {.content = content, .header_count = header_count, .headers = headers, .http_ver = "HTTP/1.1", .status = 404, .reason_str = "Not Found"};
+    return http_stringify_resp(&res);
+}
