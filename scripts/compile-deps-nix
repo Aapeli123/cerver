@@ -1,12 +1,16 @@
 #!/bin/bash
 
 cd openssl || exit
-./Configure
+./Configure no-shared no-legacy
 
 make
 
 mkdir -p ./lib
-cp libssl.so ../lib
-cp libcrypto.so ../lib
+cp libssl.so ../lib/
+cp libcrypto.so ../lib/
+
+cp libssl.so.3 ../lib/
+cp libcrypto.so.3 ../lib/
+
 
 cd ..

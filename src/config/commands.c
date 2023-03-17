@@ -79,8 +79,8 @@ void command_location(char* path, char* location, config_t* config) {
         wildcard_location_parser(path, location, config);
         return;
     }
-    char file_path_abs[strlen(config->root_dir) + strlen(location)];
-    memset(file_path_abs, 0, strlen(config->root_dir) + strlen(location));
+    char file_path_abs[strlen(config->root_dir) + strlen(location) + 1];
+    memset(file_path_abs, 0, strlen(config->root_dir) + strlen(location) + 1);
     memcpy(file_path_abs, config->root_dir, strlen(config->root_dir));
     memcpy(&(file_path_abs[strlen(config->root_dir)]), location, strlen(location));
     char* contents = read_file_to_memory(file_path_abs);

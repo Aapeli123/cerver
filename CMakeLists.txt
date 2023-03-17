@@ -34,11 +34,14 @@ target_link_libraries(cerver PRIVATE Threads::Threads)
 
 # Openssl
 target_include_directories(cerver PRIVATE ${PROJECT_SOURCE_DIR}/openssl/include)
-
+#link_directories(${PROJECT_SOURCE_DIR}/lib)
+find_library(OPENSSL ssl HINTS ${PROJECT_SOURCE_DIR}/lib)
+find_library(CRYPTO crypto HINTS ${PROJECT_SOURCE_DIR}/lib)
 if (${CMAKE_SYSTEM_NAME} STREQUAL Windows)
-    target_link_libraries(cerver PRIVATE ${PROJECT_SOURCE_DIR}/lib/libssl-3-x64.dll ${PROJECT_SOURCE_DIR}/lib/libcrypto-3-x64.dll)
+	target_link_libraries(cerver PRIVATE ${PROJECT_SOURCE_DIR}/lib/libssl-3-x64.dll ${PROJECT_SOURCE_DIR}/lib/libcrypto-3-x64.dll)
 else()
-    target_link_libraries(cerver PRIVATE ${PROJECT_SOURCE_DIR}/lib/libssl.so ${PROJECT_SOURCE_DIR}/lib/libcrypto.so)
+	message(Openssl location: ${OPENSSL})
+	target_link_libraries(cerver PRIVATE ${OPENSSL} ${CRYPTO})
 endif ()
 
 

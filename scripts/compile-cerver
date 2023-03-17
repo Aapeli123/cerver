@@ -5,7 +5,7 @@ chmod +x ./openssl/Configure
 
 chmod +x ./scripts/compile-deps-win
 chmod +x ./scripts/compile-deps-nix
-
+mkdir -p ./lib
 if [[ " $* " == *" --windows "* ]]; then
   ./scripts/compile-deps-win
   cmake -DCMAKE_TOOLCHAIN_FILE=./scripts/mingw-w64-x86_64.cmake .
@@ -14,4 +14,3 @@ else
   cmake .
 fi
 
-make

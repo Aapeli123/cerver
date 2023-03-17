@@ -35,7 +35,7 @@ int main()
 
     // Read the config file and cache relevant data
     config = config_create();
-    config_read("../../test.config", config);
+    config_read("./test.config", config);
 
     // Start a thread pool
     thread_pool = thread_pool_create(config->threads);
