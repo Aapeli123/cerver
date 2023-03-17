@@ -23,6 +23,8 @@ public.pem
 cerver
 cerver.exe
 
+# Built OpenSSL DLL-files
+
 # CMake auto generated files
 Makefile
 CMakeCache.txt
