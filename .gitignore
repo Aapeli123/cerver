@@ -6,6 +6,8 @@
 
 # Build folder:
 /out
+/build
+
 
 # Folder where needed libraries are built:
 /lib
