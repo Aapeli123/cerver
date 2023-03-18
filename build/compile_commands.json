@@ -1,0 +1,72 @@
+[
+{
+  "directory": "/home/aapo/cerver/build",
+  "command": "/usr/bin/gcc  -I/home/aapo/cerver/openssl/include -g -o CMakeFiles/cerver.dir/src/main.c.o -c /home/aapo/cerver/src/main.c",
+  "file": "/home/aapo/cerver/src/main.c"
+},
+{
+  "directory": "/home/aapo/cerver/build",
+  "command": "/usr/bin/gcc  -I/home/aapo/cerver/openssl/include -g -o CMakeFiles/cerver.dir/src/config/commands.c.o -c /home/aapo/cerver/src/config/commands.c",
+  "file": "/home/aapo/cerver/src/config/commands.c"
+},
+{
+  "directory": "/home/aapo/cerver/build",
+  "command": "/usr/bin/gcc  -I/home/aapo/cerver/openssl/include -g -o CMakeFiles/cerver.dir/src/config/config.c.o -c /home/aapo/cerver/src/config/config.c",
+  "file": "/home/aapo/cerver/src/config/config.c"
+},
+{
+  "directory": "/home/aapo/cerver/build",
+  "command": "/usr/bin/gcc  -I/home/aapo/cerver/openssl/include -g -o CMakeFiles/cerver.dir/src/config/config_t.c.o -c /home/aapo/cerver/src/config/config_t.c",
+  "file": "/home/aapo/cerver/src/config/config_t.c"
+},
+{
+  "directory": "/home/aapo/cerver/build",
+  "command": "/usr/bin/gcc  -I/home/aapo/cerver/openssl/include -g -o CMakeFiles/cerver.dir/src/dir/dir.c.o -c /home/aapo/cerver/src/dir/dir.c",
+  "file": "/home/aapo/cerver/src/dir/dir.c"
+},
+{
+  "directory": "/home/aapo/cerver/build",
+  "command": "/usr/bin/gcc  -I/home/aapo/cerver/openssl/include -g -o CMakeFiles/cerver.dir/src/dir/filereader.c.o -c /home/aapo/cerver/src/dir/filereader.c",
+  "file": "/home/aapo/cerver/src/dir/filereader.c"
+},
+{
+  "directory": "/home/aapo/cerver/build",
+  "command": "/usr/bin/gcc  -I/home/aapo/cerver/openssl/include -g -o CMakeFiles/cerver.dir/src/hashmap/hash.c.o -c /home/aapo/cerver/src/hashmap/hash.c",
+  "file": "/home/aapo/cerver/src/hashmap/hash.c"
+},
+{
+  "directory": "/home/aapo/cerver/build",
+  "command": "/usr/bin/gcc  -I/home/aapo/cerver/openssl/include -g -o CMakeFiles/cerver.dir/src/hashmap/hashmap.c.o -c /home/aapo/cerver/src/hashmap/hashmap.c",
+  "file": "/home/aapo/cerver/src/hashmap/hashmap.c"
+},
+{
+  "directory": "/home/aapo/cerver/build",
+  "command": "/usr/bin/gcc  -I/home/aapo/cerver/openssl/include -g -o CMakeFiles/cerver.dir/src/http/http.c.o -c /home/aapo/cerver/src/http/http.c",
+  "file": "/home/aapo/cerver/src/http/http.c"
+},
+{
+  "directory": "/home/aapo/cerver/build",
+  "command": "/usr/bin/gcc  -I/home/aapo/cerver/openssl/include -g -o CMakeFiles/cerver.dir/src/mime/mime.c.o -c /home/aapo/cerver/src/mime/mime.c",
+  "file": "/home/aapo/cerver/src/mime/mime.c"
+},
+{
+  "directory": "/home/aapo/cerver/build",
+  "command": "/usr/bin/gcc  -I/home/aapo/cerver/openssl/include -g -o CMakeFiles/cerver.dir/src/server/handler.c.o -c /home/aapo/cerver/src/server/handler.c",
+  "file": "/home/aapo/cerver/src/server/handler.c"
+},
+{
+  "directory": "/home/aapo/cerver/build",
+  "command": "/usr/bin/gcc  -I/home/aapo/cerver/openssl/include -g -o CMakeFiles/cerver.dir/src/server/response.c.o -c /home/aapo/cerver/src/server/response.c",
+  "file": "/home/aapo/cerver/src/server/response.c"
+},
+{
+  "directory": "/home/aapo/cerver/build",
+  "command": "/usr/bin/gcc  -I/home/aapo/cerver/openssl/include -g -o CMakeFiles/cerver.dir/src/server/server.c.o -c /home/aapo/cerver/src/server/server.c",
+  "file": "/home/aapo/cerver/src/server/server.c"
+},
+{
+  "directory": "/home/aapo/cerver/build",
+  "command": "/usr/bin/gcc  -I/home/aapo/cerver/openssl/include -g -o CMakeFiles/cerver.dir/src/threads/thread_pool.c.o -c /home/aapo/cerver/src/threads/thread_pool.c",
+  "file": "/home/aapo/cerver/src/threads/thread_pool.c"
+}
+]
