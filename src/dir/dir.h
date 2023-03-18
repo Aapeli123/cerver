@@ -7,6 +7,13 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <string.h>
+
+
+// Define path max to be something so this compiles on alpine with musl
+#ifndef PATH_MAX
+#define PATH_MAX 4086
+#endif
+
 struct Directory {
     int files;
     char** file_list;

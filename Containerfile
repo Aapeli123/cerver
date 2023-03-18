@@ -13,7 +13,7 @@ WORKDIR /cerver/cerver
 RUN git submodule update --init --recursive
 
 # Configure the package and build dependencies (openssl)
-RUN apk add --no-cache perl libc-dev zlib-dev linux-headers cmake make gcc bash
+RUN apk add --no-cache perl libc-dev zlib-dev linux-headers cmake make gcc g++ bash
 RUN chmod +x /cerver/cerver/scripts/configure
 RUN /cerver/cerver/scripts/configure
 RUN make
