@@ -18,3 +18,7 @@ RUN chmod +x /cerver/cerver/scripts/configure
 RUN /cerver/cerver/scripts/configure
 RUN make
 
+COPY testdir ./testdir
+COPY docker.config ./
+
+ENTRYPOINT [ "./cerver", "./docker.config" ]
