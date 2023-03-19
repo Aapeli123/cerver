@@ -7,7 +7,7 @@ char* read_file_to_memory(char* filepath) {
     fseek(fp, 0L, SEEK_END);
     int size = ftell(fp);
     rewind(fp);
-    char* buffer = calloc(size,  sizeof(char ));
+    char* buffer = calloc(size + 1,  sizeof(char ));
     int n = fread(buffer, sizeof(char), size, fp);
     if(n != size) {
         free(buffer);

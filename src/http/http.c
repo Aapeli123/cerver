@@ -92,6 +92,12 @@ int http_parse_req(char *http_req, int len, struct http_req *req)
     char *r_path = strtok_r(save_ptr, " ", &save_ptr);
     char *r_http_ver = strtok_r(save_ptr, " ", &save_ptr);
 
+    if(r_type == NULL || r_path == NULL || r_http_ver == NULL) {
+        header_buf_free(header_buf, hc);
+        free(req_line);
+        return -1;
+    }
+
     type = (char *)malloc((strlen(r_type) + 1) * sizeof(char));
     path = (char *)malloc((strlen(r_path) + 1) * sizeof(char));
     http_ver = (char *)malloc((strlen(r_http_ver) + 1) * sizeof(char));
