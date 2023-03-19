@@ -1,7 +1,11 @@
 #include "config.h"
 
 static void parse_config_line(char* line, config_t* config) {
-    line = strtok(line, "\n");
+    if(strchr(line, '\r') != NULL) {
+        line = strtok(line, "\r\n");
+    } else {
+        line = strtok(line, "\n");
+    }
     char* command = strtok(line, " ");
     if(!strcmp(command, "loc")) {
         // Configure page(s) for a location
@@ -52,7 +56,7 @@ void config_read(const char* path, config_t* config) {
     FILE* file = fopen(path, "r");
     while(fgets(buffer, 1024 - 1, file) != NULL) {
         // Ignore newlines
-        if(!strcmp(buffer, "\n"))
+        if(!strcmp(buffer, "\n") || !strcmp(buffer, "\n\r"))
             continue;
         // Ignore comments
         if(!strncmp(buffer, "#", 1))
