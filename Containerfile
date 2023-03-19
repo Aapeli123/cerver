@@ -19,6 +19,6 @@ RUN /cerver/cerver/scripts/configure
 RUN make
 
 COPY testdir ./testdir
-COPY docker.config ./
+COPY ./scripts/docker.config ./
 
 ENTRYPOINT [ "./cerver", "./docker.config" ]

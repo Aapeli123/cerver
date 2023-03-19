@@ -8,7 +8,6 @@
 /out
 /build
 
-
 # Folder where needed libraries are built:
 /lib
 
@@ -17,6 +16,10 @@
 # Directory for testing the directory parsing functions:
 /testdir
 
+# Config files
+test.config
+included.config
+
 # Testing certificates.
 private.pem
 public.pem
@@ -24,8 +27,6 @@ public.pem
 # Executables:
 cerver
 cerver.exe
-
-# Built OpenSSL DLL-files
 
 # CMake auto generated files
 Makefile
