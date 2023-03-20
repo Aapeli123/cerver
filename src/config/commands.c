@@ -82,7 +82,7 @@ void command_location(char* path, char* location, config_t* config) {
     char file_path_abs[strlen(config->root_dir) + strlen(location) + 1];
     memset(file_path_abs, 0, strlen(config->root_dir) + strlen(location) + 1);
     memcpy(file_path_abs, config->root_dir, strlen(config->root_dir));
-    memcpy(&(file_path_abs[strlen(config->root_dir)]), location, strlen(location));
+    memcpy(&(file_path_abs[strlen(config->root_dir)]), location, strlen(location) + 1);
     char* contents = read_file_to_memory(file_path_abs);
     HASHMAP_ADD_STRING(config->route_map, path, contents);
     // hashmap_add(config->route_map, path, contents);
@@ -111,7 +111,7 @@ void command_header(char* header_key, char* header_value, config_t* config) {
 
 
 void command_root(char* root, config_t* config) {
-    config->root_dir = malloc((strlen(root) )*sizeof(char));
+    config->root_dir = calloc((strlen(root) + 1),sizeof(char));
     strncpy(config->root_dir, root, strlen(root ));
 }
 
