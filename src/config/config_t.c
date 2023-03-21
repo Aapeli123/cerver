@@ -7,9 +7,11 @@
 config_t *config_create() {
     config_t* c = calloc(1, sizeof(config_t));
     hashmap_t* route_map = hashmap_create();
+    hashmap_t* redirect_map = hashmap_create();
     // struct http_header* headers = NULL;
     // hashmap_t* header_map = hashmap_create();
     c->route_map = route_map;
+    c->redirect_map = redirect_map;
     c->headers = NULL;
     c->threads = 0;
     c->root_dir = NULL;
@@ -32,6 +34,7 @@ void config_destroy(config_t* c) {
     }
     free(c->headers);
     hashmap_destroy(c->route_map);
+    hashmap_destroy(c->redirect_map);
     free(c->fallback_page);
     free(c->root_dir);
     free(c->pubkey);

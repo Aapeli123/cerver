@@ -6,6 +6,8 @@
 #include "../dir/filereader.h"
 // Set location for a path
 void command_location(char* path, char* location, config_t* config);
+// Setup a http 301 redirect
+void command_redirect(char* path, char* to, config_t* config);
 // Set the server port
 void command_port(char* port, config_t* config);
 // Set a http header for all requests

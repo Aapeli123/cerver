@@ -14,6 +14,7 @@ struct Config
     char* root_dir;
     char* fallback_page;
     hashmap_t* route_map;
+    hashmap_t* redirect_map;
     struct http_header** headers;
     int header_count;
     bool ssl;
