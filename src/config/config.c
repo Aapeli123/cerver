@@ -12,6 +12,11 @@ static void parse_config_line(char* line, config_t* config) {
         char* path = strtok(NULL, " ");
         char* location = strtok(NULL, " ");
         command_location(path, location, config);
+    } else if(!strcmp(command, "redirect")){
+        // Configure 300 redirect
+        char* path = strtok(NULL, " ");
+        char* to = strtok(NULL, " ");
+        command_redirect(path, to, config);
     } else if(!strcmp(command, "port")) {
         // Set the server port
         char* port = strtok(NULL, " ");

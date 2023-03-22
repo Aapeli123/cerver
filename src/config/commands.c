@@ -74,10 +74,6 @@ static void wildcard_location_parser(char* path, char* location, config_t* confi
 
 }
 
-void wildcard_redirect_parser(char* path, char* location, config_t* config) {
-    // TODO
-}
-
 void command_location(char* path, char* location, config_t* config) {
     if(strchr(path, '*') != NULL || strchr(location, '*') != NULL) {
         wildcard_location_parser(path, location, config);
@@ -94,10 +90,7 @@ void command_location(char* path, char* location, config_t* config) {
 }
 
 void command_redirect(char* path, char* to, config_t* config) {
-    if(strchr(path, '*') != NULL || strchr(to, '*') != NULL) {
-        wildcard_redirect_parser(path, to, config);
-        return;
-    }
+    HASHMAP_ADD_STRING(config->redirect_map, path, to);
 }
 
 

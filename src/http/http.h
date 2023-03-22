@@ -41,4 +41,5 @@ int http_parse_req(char *http_req, int len, struct http_req *req);
 char* http_stringify_resp(struct http_resp* res);
 char* http_response_200(char* content, struct http_header* headers, int header_count);
 char* http_response_404(char* content, struct http_header* headers, int header_count);
+char* http_response_301(char* redirect_url);
 #endif

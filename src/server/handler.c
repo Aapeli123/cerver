@@ -2,6 +2,15 @@
 
 extern SSL_CTX* tls_context;
 
+static char* resolve_redirect(char* path) {
+    char* redir_addr = (char*)hashmap_get(config->redirect_map, path);
+    if(redir_addr != NULL) return redir_addr;
+
+    // TODO Resolve wildcard redirect
+
+    return NULL;
+}
+
 static char* resolve_path(char* path) {
     char* content = (char*)hashmap_get(config->route_map, path);
     if(content!=NULL) return content;
@@ -39,8 +48,22 @@ int handle_request(char *req_buffer, int req_size, int client_fd, SSL* ssl)
         // free(resp);
         return -1;
     }
-    char* content = resolve_path(req->path);
+
     char* resp;
+
+    char* redirect = resolve_redirect(req->path);
+    if(redirect != NULL) {
+        resp = http_response_301(redirect);
+        if(config->ssl) {
+            SSL_write(ssl, resp, strlen(resp) + 1);
+        } else {
+            write_response(client_fd, resp, strlen(resp) + 1);
+        }
+        http_req_free(req);
+        free(resp);
+        return 0;
+    }
+    char* content = resolve_path(req->path);
     if(content == NULL) {
         content = config->fallback_page;
         int len = strlen(content);

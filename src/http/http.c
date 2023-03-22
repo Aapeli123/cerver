@@ -179,3 +179,9 @@ char* http_response_404(char* content, struct http_header* headers, int header_c
     struct http_resp res = {.content = content, .header_count = header_count, .headers = headers, .http_ver = "HTTP/1.1", .status = 404, .reason_str = "Not Found"};
     return http_stringify_resp(&res);
 }
+
+char* http_response_301(char* redirect_url) {
+    struct http_header headers[] = {{.key = "Location", .value = redirect_url}, {.key = "Connection", .value = "Close"}};
+    struct http_resp res = {.content = "", .header_count = 2, .headers = headers, .http_ver = "HTTP/1.1", .status = 301, .reason_str = "Moved Permanently"};
+    return http_stringify_resp(&res);
+}
