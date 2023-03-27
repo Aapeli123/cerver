@@ -9,6 +9,7 @@ struct path_tok {
 static void free_path_tok(struct path_tok *pathTok) {
     for(int i = 0; i< pathTok->list_size; i++)
         free(pathTok->list[i]);
+    free(pathTok->list);
     free(pathTok);
 }
 
@@ -50,6 +51,7 @@ static char* resolve_redirect(char* path) {
     char* path_wildcard = calloc(1, strlen(path) + 3);
     strcat(path_wildcard, path);
     strcat(path_wildcard, "/*");
+    free(path_wildcard);
 
     redir_addr = (char*)hashmap_get(config->redirect_map, path);
     if(redir_addr != NULL) return redir_addr;
@@ -61,7 +63,10 @@ static char* resolve_redirect(char* path) {
     for (int i = (possible_paths->list_size - 1); i >= 0; i--) {
         char* attempt = possible_paths->list[i];
         redir_addr = (char*)hashmap_get(config->redirect_map, attempt);
-        if(redir_addr != NULL) return redir_addr;
+        if(redir_addr != NULL) {
+            free_path_tok(possible_paths);
+            return redir_addr;
+        }
     }
     free_path_tok(possible_paths);
     return NULL;
@@ -87,7 +92,10 @@ static char* resolve_path(char* path) {
     for (int i = (possible_paths->list_size - 1); i >= 0; i--) {
         char* attempt = possible_paths->list[i];
         content = (char*)hashmap_get(config->route_map, attempt);
-        if(content != NULL) return content;
+        if(content != NULL) {
+            free_path_tok(possible_paths);
+            return content;
+        };
     }
     free_path_tok(possible_paths);
     return NULL;
@@ -96,13 +104,8 @@ static char* resolve_path(char* path) {
 
 int handle_request(char *req_buffer, int req_size, int client_fd, SSL* ssl)
 {
-//    struct http_resp res = {.content = "Welcome to cerver", .header_count = 2, .headers = headers, .http_ver = "HTTP/1.1", .status = 200, .reason_str = "OK"};
-    // char *resp = http_stringify_resp(&res);
     if (req_buffer == NULL)
     {
-        // write_response(client_fd, resp, strlen(resp) + 1);
-        // free(resp);
-
         return 0;
     }
     struct http_req *req = (struct http_req *)calloc(1, sizeof(struct http_req));
@@ -110,7 +113,6 @@ int handle_request(char *req_buffer, int req_size, int client_fd, SSL* ssl)
     if (r < 0)
     {
         http_req_free(req);
-        // free(resp);
         return -1;
     }
 
