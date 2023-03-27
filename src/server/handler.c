@@ -53,8 +53,11 @@ static char* resolve_redirect(char* path) {
 
     redir_addr = (char*)hashmap_get(config->redirect_map, path);
     if(redir_addr != NULL) return redir_addr;
-    // TODO Resolve wildcard redirect
-    struct path_tok* possible_paths = tokenize_path(path);
+    char path_clone[strlen(path) + 1];
+    memset(path_clone, 0, strlen(path) + 1);
+    strcpy(path_clone, path);
+    // Resolve wildcard redirect
+    struct path_tok* possible_paths = tokenize_path(path_clone);
     for (int i = (possible_paths->list_size - 1); i >= 0; i--) {
         char* attempt = possible_paths->list[i];
         redir_addr = (char*)hashmap_get(config->redirect_map, attempt);
@@ -70,14 +73,23 @@ static char* resolve_path(char* path) {
 
     char* path_wildcard = calloc(1, strlen(path) + 3);
     strcat(path_wildcard, path);
-    strcat(path_wildcard, "/*");
+    strcat(path_wildcard, "*");
 
     content = (char*)hashmap_get(config->route_map, path_wildcard);
     free(path_wildcard);
     if(content!=NULL) return content;
 
-    // TODO Resolve double wildcard path
+    char path_clone[strlen(path) + 1];
+    memset(path_clone, 0, strlen(path) + 1);
+    strcpy(path_clone, path);
 
+    struct path_tok* possible_paths = tokenize_path(path_clone);
+    for (int i = (possible_paths->list_size - 1); i >= 0; i--) {
+        char* attempt = possible_paths->list[i];
+        content = (char*)hashmap_get(config->route_map, attempt);
+        if(content != NULL) return content;
+    }
+    free_path_tok(possible_paths);
     return NULL;
 }
 
