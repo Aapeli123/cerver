@@ -1,13 +1,66 @@
 #include "handler.h"
 
 extern SSL_CTX* tls_context;
+struct path_tok {
+    char** list;
+    int list_size;
+};
+
+static void free_path_tok(struct path_tok *pathTok) {
+    for(int i = 0; i< pathTok->list_size; i++)
+        free(pathTok->list[i]);
+    free(pathTok);
+}
+
+static struct path_tok* tokenize_path(char* path) {
+    char *cur, *save, *cur_token = NULL, *ctx = NULL;
+
+    struct path_tok* tokenized = calloc(1, sizeof (struct path_tok));
+    int i = 0;
+    ctx = calloc(strlen(path) + 2, sizeof(char ));
+    // cur = strtok_r(path, "/", &save);
+
+    char** list = malloc(sizeof (char*));
+    while (1) {
+        cur = strtok_r(path, "/", &path);
+        if(cur == NULL){
+            break;
+        }
+        strcat(ctx, "/");
+        strcat(ctx, cur);
+
+        cur_token = calloc(strlen(ctx) + 4, sizeof (char));
+        strcpy(cur_token, ctx);
+        strcat(cur_token, "/**");
+        list[i] = cur_token;
+        i++;
+        list = realloc(list, (i + 1) * sizeof (char*));
+    }
+    free(ctx);
+    tokenized->list_size = i;
+    tokenized->list = list;
+    return tokenized;
+}
 
 static char* resolve_redirect(char* path) {
     char* redir_addr = (char*)hashmap_get(config->redirect_map, path);
     if(redir_addr != NULL) return redir_addr;
 
-    // TODO Resolve wildcard redirect
 
+    char* path_wildcard = calloc(1, strlen(path) + 3);
+    strcat(path_wildcard, path);
+    strcat(path_wildcard, "/*");
+
+    redir_addr = (char*)hashmap_get(config->redirect_map, path);
+    if(redir_addr != NULL) return redir_addr;
+    // TODO Resolve wildcard redirect
+    struct path_tok* possible_paths = tokenize_path(path);
+    for (int i = (possible_paths->list_size - 1); i >= 0; i--) {
+        char* attempt = possible_paths->list[i];
+        redir_addr = (char*)hashmap_get(config->redirect_map, attempt);
+        if(redir_addr != NULL) return redir_addr;
+    }
+    free_path_tok(possible_paths);
     return NULL;
 }
 
@@ -15,9 +68,9 @@ static char* resolve_path(char* path) {
     char* content = (char*)hashmap_get(config->route_map, path);
     if(content!=NULL) return content;
 
-    char* path_wildcard = calloc(1, strlen(path) + 2);
+    char* path_wildcard = calloc(1, strlen(path) + 3);
     strcat(path_wildcard, path);
-    strcat(path_wildcard, "*");
+    strcat(path_wildcard, "/*");
 
     content = (char*)hashmap_get(config->route_map, path_wildcard);
     free(path_wildcard);
