@@ -13,6 +13,7 @@ void mime_table_init() {
     ADD_TYPE("jpg","image/jpeg");
     ADD_TYPE("png","image/png");
     ADD_TYPE("pdf","application/pdf");
+    ADD_TYPE("ico", "image/x-icon");
 }
 #undef ADD_TYPE
 
