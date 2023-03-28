@@ -22,4 +22,6 @@ void command_threads(char* thread_count, config_t* config);
 void command_ssl(config_t* config);
 // Set SSL keys:
 void command_keys(char* pubkey, char* privkey, config_t* config);
+// Page to serve for internal server errors
+void command_errpage(char* page, config_t* config);
 #endif

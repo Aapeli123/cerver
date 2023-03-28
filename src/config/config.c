@@ -49,7 +49,10 @@ static void parse_config_line(char* line, config_t* config) {
         char* pub = strtok(NULL, " ");
         char* priv = strtok(NULL, " ");
         command_keys(pub, priv, config);
-    }else {
+    } else if(!strcmp(command, "errpage")) {
+        char* page = strtok(NULL, " ");
+        command_errpage(page, config);
+    } else {
         printf("Failed to parse line: %s. Unknown command %s.\n", line, command);
         return;
     }

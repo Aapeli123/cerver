@@ -101,6 +101,9 @@ static char* resolve_path(char* path) {
     return NULL;
 }
 
+static void respond_with_err(int client_fd, SSL* ssl) {
+
+}
 
 int handle_request(char *req_buffer, int req_size, int client_fd, SSL* ssl)
 {

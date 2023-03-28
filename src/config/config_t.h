@@ -13,6 +13,7 @@ struct Config
     int threads;
     char* root_dir;
     char* fallback_page;
+    char* err_page;
     hashmap_t* route_map;
     hashmap_t* redirect_map;
     struct http_header** headers;

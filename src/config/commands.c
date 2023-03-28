@@ -144,3 +144,11 @@ void command_keys(char* pubkey, char* privkey,config_t* config) {
     config->privkey = malloc(strlen(privkey) + 1);
     strcpy(config->privkey, privkey);
 }
+
+void command_errpage(char* page, config_t* config) {
+    char* fp = strtok(page,"\n");
+    char* abspath = getAbsPath(config->root_dir, fp);
+    char* fallback_content = read_file_to_memory(abspath);
+    free(abspath);
+    config->err_page = fallback_content;
+}

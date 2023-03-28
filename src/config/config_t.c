@@ -20,6 +20,7 @@ config_t *config_create() {
     c->header_count = 0;
     c->pubkey = NULL;
     c->privkey = NULL;
+    c->err_page = NULL;
     // c->header_map  = header_map;
     return c;
 }
@@ -39,5 +40,6 @@ void config_destroy(config_t* c) {
     free(c->root_dir);
     free(c->pubkey);
     free(c->privkey);
+    free(c->err_page);
     free(c);
 }
