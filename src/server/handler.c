@@ -188,6 +188,7 @@ void handler_worker(void *client_fd)
     int bufSize = BUFFER_SIZE;
     do {
         if(bufSize >= 1024 * 1000) { // Max req size is 1000 KB
+            respond_with_err(fd, NULL);
             shutdown(fd, SHUT_RDWR);
             free(buffer);
             printf("ERR: Req from fd %d was too long. Aborting...\n", fd);
@@ -199,6 +200,7 @@ void handler_worker(void *client_fd)
         if (n == -1)
         {
             perror("ERR");
+            respond_with_err(fd, NULL);
             shutdown(fd, SHUT_RDWR);
             free(buffer);
             return;
@@ -230,6 +232,7 @@ void handler_ssl_worker(void* client_fd) {
     char *buffer = (char *)calloc(1, BUFFER_SIZE);
     if (buffer == NULL)
     {
+        respond_with_err(fd, ssl);
         SSL_shutdown(ssl);
         SSL_free(ssl);
         close(fd);
@@ -241,6 +244,8 @@ void handler_ssl_worker(void* client_fd) {
     int bufSize = BUFFER_SIZE;
     do {
         if(bufSize >= 1024 * 1000) { // Max req size is 1000 KB
+            respond_with_err(fd, ssl);
+
             SSL_shutdown(ssl);
             free(buffer);
             printf("ERR: Req from fd %d was too long. Aborting...\n", fd);
@@ -253,6 +258,8 @@ void handler_ssl_worker(void* client_fd) {
         if (n == -1)
         {
             perror("ERR");
+            respond_with_err(fd, ssl);
+
             SSL_shutdown(ssl);
             free(buffer);
             return;
