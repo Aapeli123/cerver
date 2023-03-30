@@ -102,13 +102,20 @@ static char* resolve_path(char* path) {
 }
 
 static void respond_with_err(int client_fd, SSL* ssl) {
-
+    char* resp = http_response_500(config->err_page);
+    if(config->ssl) {
+        SSL_write(ssl, resp, strlen(resp) + 1);
+    } else {
+        write_response(client_fd, resp, strlen(resp) + 1);
+    }
+    free(resp);
 }
 
 int handle_request(char *req_buffer, int req_size, int client_fd, SSL* ssl)
 {
     if (req_buffer == NULL)
     {
+        respond_with_err(client_fd, ssl);
         return 0;
     }
     struct http_req *req = (struct http_req *)calloc(1, sizeof(struct http_req));
@@ -116,6 +123,7 @@ int handle_request(char *req_buffer, int req_size, int client_fd, SSL* ssl)
     if (r < 0)
     {
         http_req_free(req);
+        respond_with_err(client_fd, ssl);
         return -1;
     }
 
@@ -153,6 +161,7 @@ int handle_request(char *req_buffer, int req_size, int client_fd, SSL* ssl)
     if(resp == NULL) {
         free(resp);
         http_req_free(req);
+        respond_with_err(client_fd, ssl);
         return -1;
     }
     if(config->ssl) {

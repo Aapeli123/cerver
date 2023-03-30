@@ -185,3 +185,12 @@ char* http_response_301(char* redirect_url) {
     struct http_resp res = {.content = "", .header_count = 2, .headers = headers, .http_ver = "HTTP/1.1", .status = 301, .reason_str = "Moved Permanently"};
     return http_stringify_resp(&res);
 }
+
+char* http_response_500(char* err_page) {
+    if(err_page == NULL) {
+        err_page = "";
+    }
+    struct http_header header[] = {{.key = "Connection", .value = "Close"}};
+    struct http_resp res = {.content = err_page, .header_count = 1, .headers = header, .http_ver = "HTTP/1.1", .status = 500, .reason_str = "Internal Server Error"};
+    return http_stringify_resp(&res);
+}
