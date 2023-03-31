@@ -194,7 +194,14 @@ void handler_worker(void *client_fd)
             printf("ERR: Req from fd %d was too long. Aborting...\n", fd);
             return;
         }
-        buffer = realloc(buffer, bufSize);
+        char* newbuf = realloc(buffer, bufSize);
+        if(newbuf == NULL) {
+            respond_with_err(fd, NULL);
+            shutdown(fd, SHUT_RDWR);
+            free(buffer);
+            return;
+        }
+        buffer = newbuf;
         n = read(fd, buffer + BUFFER_SIZE * sizeof(char) * i, BUFFER_SIZE);
         
         if (n == -1)
@@ -251,8 +258,15 @@ void handler_ssl_worker(void* client_fd) {
             printf("ERR: Req from fd %d was too long. Aborting...\n", fd);
             return;
         }
-        buffer = realloc(buffer, bufSize);
+        char* newbuf = realloc(buffer, bufSize);
+        if(newbuf == NULL) {
+            respond_with_err(fd, ssl);
 
+            SSL_shutdown(ssl);
+            free(buffer);
+            return;
+        }
+        buffer = newbuf;
         n = SSL_read(ssl, buffer + BUFFER_SIZE * sizeof(char) * i, BUFFER_SIZE);
 
         if (n == -1)
