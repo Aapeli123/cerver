@@ -11,6 +11,10 @@ static int count_dir_files(char* path, bool recurse) {
 
     while((entry = readdir(directory))) {
         char* filepth = calloc(PATH_MAX, sizeof(char));
+        if(filepth == NULL) {
+            printf("Memory allocation failed\n");
+            return -1;
+        }
         sprintf(filepth,"%s/%s", path,entry->d_name);
         stat(filepth, &filestat);
         free(filepth);
@@ -18,6 +22,10 @@ static int count_dir_files(char* path, bool recurse) {
             if(!recurse) continue;
             if(!strcmp(".", entry->d_name) || !strcmp("..", entry->d_name)) continue;
             char* r_path = calloc(PATH_MAX, sizeof(char));
+            if(r_path == NULL) {
+                printf("Memory allocation failed\n");
+                return -1;
+            }
             sprintf(r_path,"%s/%s", path,entry->d_name);
 
             count += count_dir_files(r_path, true);
@@ -52,6 +60,10 @@ static int get_dir_files(char* path, bool recurse, char** files, int offset) {
             if(!recurse) continue;
             if(!strcmp(".", entry->d_name) || !strcmp("..", entry->d_name)) continue;
             char* r_path = calloc(PATH_MAX, sizeof(char));
+            if(r_path == NULL) {
+                printf("Memory allocation failed\n");
+                return -1;
+            }
             sprintf(r_path,"%s%s/", path,entry->d_name);
             fc += get_dir_files(r_path, true, files,offset + file_count + fc);
             free(r_path);

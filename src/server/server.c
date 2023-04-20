@@ -15,13 +15,6 @@ char *buffer;
 bool should_run = true;
 SSL_CTX *tls_context;
 pthread_mutex_t* tls_context_mutex;
-void write_data(int fd) {
-
-}
-
-void read_data(int fd) {
-
-}
 
 void server_cleanup()
 {
@@ -40,7 +33,7 @@ void server_cleanup()
 int server_create_socket()
 {
     server_descriptor = socket(AF_INET, SOCK_STREAM, 0);
-    HANDLE_ERROR(server_descriptor);
+    HANDLE_ERROR(server_descriptor)
     int optval = 1;
     int err = setsockopt(server_descriptor, SOL_SOCKET, SO_REUSEADDR, &optval, sizeof(optval));
     return err;
@@ -101,12 +94,12 @@ int init()
 
 int server_start(struct thread_pool *tp)
 {
-    HANDLE_ERROR(init());
+    HANDLE_ERROR(init())
 
     // Start the server:
-    HANDLE_ERROR(server_create_socket());
-    HANDLE_ERROR(server_bind(config->port));
-    HANDLE_ERROR(server_listen());
+    HANDLE_ERROR(server_create_socket())
+    HANDLE_ERROR(server_bind(config->port))
+    HANDLE_ERROR(server_listen())
 
     printf("Server listening on port %d\n", config->port);
 

@@ -14,14 +14,14 @@ static void free_path_tok(struct path_tok *pathTok) {
 }
 
 static struct path_tok* tokenize_path(char* path) {
-    char *cur, *save, *cur_token = NULL, *ctx = NULL;
+    char *cur, *cur_token = NULL, *ctx = NULL;
 
     struct path_tok* tokenized = calloc(1, sizeof (struct path_tok));
     int i = 0;
     ctx = calloc(strlen(path) + 2, sizeof(char ));
-    // cur = strtok_r(path, "/", &save);
 
     char** list = malloc(sizeof (char*));
+    char** newList;
     while (1) {
         cur = strtok_r(path, "/", &path);
         if(cur == NULL){
@@ -35,7 +35,12 @@ static struct path_tok* tokenize_path(char* path) {
         strcat(cur_token, "/**");
         list[i] = cur_token;
         i++;
-        list = realloc(list, (i + 1) * sizeof (char*));
+        newList = realloc(list, (i + 1) * sizeof (char*));
+        if(newList == NULL) {
+            free(list);
+            return NULL;
+        }
+        list = newList;
     }
     free(ctx);
     tokenized->list_size = i;
@@ -44,8 +49,8 @@ static struct path_tok* tokenize_path(char* path) {
 }
 
 static char* resolve_redirect(char* path) {
-    char* redir_addr = (char*)hashmap_get(config->redirect_map, path);
-    if(redir_addr != NULL) return redir_addr;
+    char* addr = (char*)hashmap_get(config->redirect_map, path);
+    if(addr != NULL) return addr;
 
 
     char* path_wildcard = calloc(1, strlen(path) + 3);
@@ -53,8 +58,8 @@ static char* resolve_redirect(char* path) {
     strcat(path_wildcard, "/*");
     free(path_wildcard);
 
-    redir_addr = (char*)hashmap_get(config->redirect_map, path);
-    if(redir_addr != NULL) return redir_addr;
+    addr = (char*)hashmap_get(config->redirect_map, path);
+    if(addr != NULL) return addr;
     char path_clone[strlen(path) + 1];
     memset(path_clone, 0, strlen(path) + 1);
     strcpy(path_clone, path);
@@ -62,10 +67,10 @@ static char* resolve_redirect(char* path) {
     struct path_tok* possible_paths = tokenize_path(path_clone);
     for (int i = (possible_paths->list_size - 1); i >= 0; i--) {
         char* attempt = possible_paths->list[i];
-        redir_addr = (char*)hashmap_get(config->redirect_map, attempt);
-        if(redir_addr != NULL) {
+        addr = (char*)hashmap_get(config->redirect_map, attempt);
+        if(addr != NULL) {
             free_path_tok(possible_paths);
-            return redir_addr;
+            return addr;
         }
     }
     free_path_tok(possible_paths);
@@ -95,7 +100,7 @@ static char* resolve_path(char* path) {
         if(content != NULL) {
             free_path_tok(possible_paths);
             return content;
-        };
+        }
     }
     free_path_tok(possible_paths);
     return NULL;
@@ -183,7 +188,7 @@ void handler_worker(void *client_fd)
     {
         return;
     }
-    int n = 0;
+    int n;
     int i = 0;
     int bufSize = BUFFER_SIZE;
     do {
@@ -194,14 +199,14 @@ void handler_worker(void *client_fd)
             printf("ERR: Req from fd %d was too long. Aborting...\n", fd);
             return;
         }
-        char* newbuf = realloc(buffer, bufSize);
-        if(newbuf == NULL) {
+        char* new_buf = realloc(buffer, bufSize);
+        if(new_buf == NULL) {
             respond_with_err(fd, NULL);
             shutdown(fd, SHUT_RDWR);
             free(buffer);
             return;
         }
-        buffer = newbuf;
+        buffer = new_buf;
         n = read(fd, buffer + BUFFER_SIZE * sizeof(char) * i, BUFFER_SIZE);
         
         if (n == -1)
@@ -246,7 +251,7 @@ void handler_ssl_worker(void* client_fd) {
 
         return;
     }
-    int n = 0;
+    int n;
     int i = 0;
     int bufSize = BUFFER_SIZE;
     do {
@@ -258,15 +263,15 @@ void handler_ssl_worker(void* client_fd) {
             printf("ERR: Req from fd %d was too long. Aborting...\n", fd);
             return;
         }
-        char* newbuf = realloc(buffer, bufSize);
-        if(newbuf == NULL) {
+        char* new_buf = realloc(buffer, bufSize);
+        if(new_buf == NULL) {
             respond_with_err(fd, ssl);
 
             SSL_shutdown(ssl);
             free(buffer);
             return;
         }
-        buffer = newbuf;
+        buffer = new_buf;
         n = SSL_read(ssl, buffer + BUFFER_SIZE * sizeof(char) * i, BUFFER_SIZE);
 
         if (n == -1)
