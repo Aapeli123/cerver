@@ -2,12 +2,8 @@
 
 static int next_bucket_count(int cur_buckets)
 {
-    for (int i = 0; i < 140; i++)
-    {
-        if (primes[i] > cur_buckets)
-        {
-            return primes[i];
-        }
+    if(cur_buckets < 141) {
+        return primes[cur_buckets + 1];
     }
     // Fallback if we run out of primes:
     return cur_buckets + 1000;
